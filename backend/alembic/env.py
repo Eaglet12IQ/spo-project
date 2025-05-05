@@ -8,6 +8,9 @@ from alembic import context
 from app.models.base import Base  # Импортируйте Base из ваших моделей
 from app.models.user import User  # Импортируйте все модели
 from app.models.role import Role
+from app.models.collector import Collector
+from app.models.collection import Collection
+from app.models.stamp import Stamp
 
 target_metadata = Base.metadata
 

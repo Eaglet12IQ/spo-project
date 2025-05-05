@@ -10,11 +10,9 @@ class User(Base):
     email = Column(String, unique=True, index=True, nullable=False)
     username = Column(String, unique=True, index=True, nullable=False)  # Новое поле
     hashed_password = Column(String, nullable=False)
-    avatar_url = Column(String, nullable=True, default="/static/avatars/default_avatar.png")  # Дефолтное значение
     role_id = Column(Integer, ForeignKey("roles.id"), nullable=False)
     
     # Связь "многие к одному" с ролями
     role = relationship("Role", back_populates="users")
+    collector = relationship("Collector", back_populates="user", uselist=False)
 
-    def __repr__(self):
-        return f"<User(id={self.id}, email={self.email}, username={self.username})>"

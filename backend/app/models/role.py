@@ -10,6 +10,3 @@ class Role(Base):
 
     # Связь "один ко многим" с пользователями
     users = relationship("User", back_populates="role")
-
-    def __repr__(self):
-        return f"<Role(id={self.id}, name={self.name})>"

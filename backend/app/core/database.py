@@ -1,5 +1,5 @@
-from sqlalchemy import create_engine, Column, Integer, String
-from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
 # Укажите URL для подключения к БД
 SQLALCHEMY_DATABASE_URL = "postgresql://postgres:12345@localhost:5432/marki"  # SQLite будет создан в файле sql_app.db

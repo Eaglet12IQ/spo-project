@@ -1,0 +1,64 @@
+@startuml
+hide circle
+skinparam linetype ortho
+
+' Arrange entities in a rectangular layout
+left to right direction
+
+entity "User" as User {
+  *id : Integer <<PK>>
+  --
+  email : String
+  username : String
+  hashed_password : String
+  role_id : Integer <<FK>>
+}
+
+entity "Role" as Role {
+  *id : Integer <<PK>>
+  --
+  name : String
+}
+
+entity "Collector" as Collector {
+  *user_id : Integer <<PK, FK>>
+  --
+  avatar_url : String
+  country : String
+  phone_number : String
+  first_name : String
+  last_name : String
+  middle_name : String
+}
+
+entity "Collection" as Collection {
+  *id : Integer <<PK>>
+  --
+  collector_id : Integer <<FK>>
+  name : String
+  description : String
+}
+
+entity "Stamp" as Stamp {
+  *id : Integer <<PK>>
+  --
+  name : String
+  serial_number : String
+  country : String
+  year : Integer
+  circulation : Integer
+  cost : Integer
+  perforation : Integer
+  topic : String
+  features : String
+  photo_url : String
+  collection_id : Integer <<FK>>
+}
+
+' Relationships without labels
+Role ||--o{ User
+User ||--|| Collector
+Collector ||--o{ Collection
+Collection ||--|| Stamp
+
+@enduml

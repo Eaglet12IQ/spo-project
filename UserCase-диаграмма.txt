@@ -1,0 +1,37 @@
+@startuml
+left to right direction
+
+actor "Авторизованный\nпользователь" as User #LightGreen
+actor "Администратор" as Admin #LightCoral
+
+rectangle "Функции для\nАвторизованного пользователя" {
+  usecase "Регистрация" as UC_Register
+  usecase "Авторизация" as UC_Auth
+  usecase "Управление профилем" as UC_ManageProfile
+  usecase "Управление коллекциями" as UC_ManageCollections
+  usecase "Управление марками" as UC_ManageStamps
+  usecase "Просмотр информации о марках" as UC_ViewStamps
+  usecase "Просмотр информации о коллекционерах" as UC_ViewCollectors
+  usecase "Просмотр информации о коллекциях" as UC_ViewCollections
+}
+
+rectangle "Функции для\nАдминистратора" {
+  usecase "Управление пользователями" as UC_ManageUsers
+  usecase "Управление ролями" as UC_ManageRoles
+  usecase "Формирование отчетов и запросов" as UC_Reports
+}
+
+User --> UC_Register
+User --> UC_ManageProfile
+User --> UC_ManageStamps
+User --> UC_ViewStamps
+User --> UC_ViewCollectors
+User --> UC_ViewCollections
+User --> UC_ManageCollections
+User --> UC_Auth
+
+Admin --> UC_ManageUsers
+Admin --> UC_ManageRoles
+Admin --> UC_Reports
+
+@enduml
