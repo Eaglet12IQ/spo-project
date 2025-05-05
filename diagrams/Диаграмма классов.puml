@@ -1,0 +1,74 @@
+@startuml
+
+class Stamp {
+  - id: Integer
+  - name: String
+  - serial_number: String
+  - country: String
+  - year: Integer
+  - circulation: Integer
+  - cost: Integer
+  - perforation: Integer
+  - topic: String
+  - features: String
+  - photo_url: String
+  - collection_id: Integer
+  --
+  + getPrice(): Integer
+  + isRare(): Boolean
+}
+
+class Collection {
+  - id: Integer
+  - collector_id: Integer
+  - name: String
+  - description: String
+  --
+  + addStamp(stamp: Stamp): void
+  + removeStamp(stamp: Stamp): void
+  + getTotalValue(): Integer
+  + getRareStamps(): List~Stamp~
+}
+
+class Collector {
+  - user_id: Integer
+  - avatar_url: String
+  - country: String
+  - phone_number: String
+  - first_name: String
+  - last_name: String
+  - middle_name: String
+  --
+  + getCollections(): List~Collection~
+  + getRareStampsCount(): Integer
+  + getMostExpensiveStamp(): Stamp
+}
+
+class User {
+  - id: Integer
+  - email: String
+  - username: String
+  - hashed_password: String
+  - role_id: Integer
+  --
+  + authenticate(password: String): Boolean
+  + verifyPassword(password: String): Boolean
+  + generateAccessToken(): String
+  + generateRefreshToken(): String
+  + getRole(): Role
+}
+
+class Role {
+  - id: Integer
+  - name: String
+  --
+  + getUsers(): List~User~
+  + addUser(user: User): void
+}
+
+User "1" -- "1" Collector
+Role "1" -- "*" User
+Collector "1" -- "*" Collection
+Collection "1" -- "1" Stamp
+
+@enduml

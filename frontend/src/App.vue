@@ -2,7 +2,7 @@
 import { onMounted, watch, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import NavBar from './components/NavBar.vue'
-import Footer from './components/Footer.vue'
+// Footer import removed as footer will not be used
 
 const route = useRoute()
 const isAuthPage = ref(false)
@@ -28,7 +28,7 @@ onMounted(() => {
       </router-view>
     </main>
     
-    <Footer v-if="!isAuthPage" />
+    <!-- Footer removed as requested -->
   </div>
 </template>
 

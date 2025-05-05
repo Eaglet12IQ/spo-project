@@ -228,41 +228,5 @@ onMounted(() => {
         </div>
       </div>
     </section>
-    
-    <!-- Call to action section -->
-    <section class="py-12 sm:py-16 bg-white">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div 
-          class="bg-primary-800 rounded-lg shadow-xl overflow-hidden"
-          v-motion
-          :initial="{ opacity: 0, scale: 0.95 }"
-          :enter="{ opacity: 1, scale: 1, transition: { duration: 800 } }"
-          :visible="{ once: true }"
-        >
-          <div class="px-6 py-12 sm:px-12 sm:py-16 lg:flex lg:items-center lg:justify-between">
-            <div>
-              <h2 class="text-3xl font-extrabold tracking-tight text-white font-serif">
-                Ready to start your collection?
-              </h2>
-              <p class="mt-4 text-lg text-primary-100">
-                Join thousands of collectors, showcase your stamps, and connect with like-minded enthusiasts.
-              </p>
-            </div>
-            <div class="mt-8 flex lg:mt-0 lg:flex-shrink-0">
-              <div class="inline-flex rounded-md shadow">
-                <router-link to="/register" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-primary-900 bg-white hover:bg-primary-50">
-                  Get started
-                </router-link>
-              </div>
-              <div class="ml-3 inline-flex rounded-md shadow">
-                <router-link to="/stamps" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700">
-                  Explore stamps
-                </router-link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
   </div>
 </template>

@@ -2,9 +2,6 @@
 hide circle
 skinparam linetype ortho
 
-' Arrange entities in a rectangular layout
-left to right direction
-
 entity "User" as User {
   *id : Integer <<PK>>
   --
@@ -55,7 +52,6 @@ entity "Stamp" as Stamp {
   collection_id : Integer <<FK>>
 }
 
-' Relationships without labels
 Role ||--o{ User
 User ||--|| Collector
 Collector ||--o{ Collection
