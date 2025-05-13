@@ -43,10 +43,10 @@ const handleSubmit = async () => {
   >
     <div class="sm:mx-auto sm:w-full sm:max-w-md">
       <h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-primary-900 font-serif">
-        Welcome back
+        С возвращением
       </h2>
       <p class="mt-2 text-center text-sm text-primary-600">
-        Sign in to access your collection
+        Войдите в систему, чтобы получить доступ к своей коллекции
       </p>
     </div>
 
@@ -59,8 +59,8 @@ const handleSubmit = async () => {
       >
         <form class="space-y-6" @submit.prevent="handleSubmit">
           <div>
-            <label for="identifier" class="block text-sm font-medium text-primary-700">
-              Username or Email
+            <label for="identifier" class="block text-sm font-medium text-primary-7 q00">
+              Имя пользователя или электронная почта
             </label>
             <div class="mt-1">
               <input
@@ -68,15 +68,15 @@ const handleSubmit = async () => {
                 type="text"
                 v-model="credentials.identifier"
                 required
-                class="input-field"
-                placeholder="username or email"
+                class="w-full p-2 border-2"
+                placeholder="Имя пользователя или электронная почта"
               />
             </div>
           </div>
 
           <div>
             <label for="password" class="block text-sm font-medium text-primary-700">
-              Password
+              Пароль
             </label>
             <div class="mt-1">
               <input
@@ -84,7 +84,7 @@ const handleSubmit = async () => {
                 type="password"
                 v-model="credentials.password"
                 required
-                class="input-field"
+                class="w-full p-2 border-2"
                 placeholder="••••••••"
               />
             </div>
@@ -121,16 +121,16 @@ const handleSubmit = async () => {
                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                 ></path>
               </svg>
-              {{ loading ? 'Signing in...' : 'Sign in' }}
+              {{ loading ? 'Вход в систему...' : 'Войти' }}
             </button>
           </div>
         </form>
         
         <div class="mt-6 text-center text-sm">
           <p class="text-primary-600">
-            Don't have an account?
+            У вас нет учетной записи?
             <router-link to="/register" class="font-medium text-primary-700 hover:text-primary-800">
-              Register now
+              Зарегистрируйтесь
             </router-link>
           </p>
         </div>

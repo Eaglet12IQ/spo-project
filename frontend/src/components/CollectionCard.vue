@@ -35,7 +35,7 @@ const formattedDate = computed(() => {
         <div class="absolute bottom-0 left-0 right-0 p-4">
           <h3 class="text-xl font-serif font-semibold text-white drop-shadow-sm">{{ collection.title }}</h3>
           <div class="flex items-center mt-1">
-            <span class="text-sm font-medium text-white/90">{{ collection.stampCount }} stamps</span>
+            <span class="text-sm font-medium text-white/90">{{ collection.stampCount }} марок</span>
           </div>
         </div>
       </div>

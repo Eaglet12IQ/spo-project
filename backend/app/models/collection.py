@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 from .base import Base
+from app.models.stamp import Stamp
 
 class Collection(Base):
     __tablename__ = "collections"

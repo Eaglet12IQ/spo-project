@@ -43,11 +43,11 @@ const formattedDate = computed(() => {
         <div class="mt-4 pt-4 border-t border-gray-100 grid grid-cols-2 gap-2 text-center">
           <div>
             <div class="text-primary-900 font-semibold">{{ collector.stampCount }}</div>
-            <div class="text-xs text-primary-500">Stamps</div>
+            <div class="text-xs text-primary-500">Марки</div>
           </div>
           <div>
             <div class="text-primary-900 font-semibold">{{ collector.collectionCount }}</div>
-            <div class="text-xs text-primary-500">Collections</div>
+            <div class="text-xs text-primary-500">Коллекции</div>
           </div>
         </div>
       </div>

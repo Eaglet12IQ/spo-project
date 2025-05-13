@@ -67,10 +67,10 @@ const handleSubmit = async () => {
   >
     <div class="sm:mx-auto sm:w-full sm:max-w-md">
       <h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-primary-900 font-serif">
-        Join PhilateList
+        Присоединяйтесь к PhilateList
       </h2>
       <p class="mt-2 text-center text-sm text-primary-600">
-        Start your stamp collecting journey today
+        Начните свое путешествие по коллекционированию марок
       </p>
     </div>
 
@@ -84,7 +84,7 @@ const handleSubmit = async () => {
         <form class="space-y-6" @submit.prevent="handleSubmit">
           <div>
             <label for="username" class="block text-sm font-medium text-primary-700">
-              Username
+              Имя пользователя
             </label>
             <div class="mt-1">
               <input
@@ -92,7 +92,7 @@ const handleSubmit = async () => {
                 type="text"
                 v-model="userData.username"
                 required
-                class="input-field"
+                class="w-full p-2 border-2"
                 placeholder="johndoe"
               />
             </div>
@@ -100,7 +100,7 @@ const handleSubmit = async () => {
 
           <div>
             <label for="email" class="block text-sm font-medium text-primary-700">
-              Email address
+              Электронная почта
             </label>
             <div class="mt-1">
               <input
@@ -108,7 +108,7 @@ const handleSubmit = async () => {
                 type="email"
                 v-model="userData.email"
                 required
-                class="input-field"
+                class="w-full p-2 border-2"
                 placeholder="you@example.com"
               />
             </div>
@@ -116,7 +116,7 @@ const handleSubmit = async () => {
 
           <div>
             <label for="password" class="block text-sm font-medium text-primary-700">
-              Password
+              Пароль
             </label>
             <div class="mt-1">
               <input
@@ -124,7 +124,7 @@ const handleSubmit = async () => {
                 type="password"
                 v-model="userData.password"
                 required
-                class="input-field"
+                class="w-full p-2 border-2"
                 placeholder="••••••••"
               />
             </div>
@@ -132,7 +132,7 @@ const handleSubmit = async () => {
 
           <div>
             <label for="confirm-password" class="block text-sm font-medium text-primary-700">
-              Confirm password
+              Подтверждение пароля
             </label>
             <div class="mt-1">
               <input
@@ -140,7 +140,7 @@ const handleSubmit = async () => {
                 type="password"
                 v-model="userData.confirmPassword"
                 required
-                class="input-field"
+                class="w-full p-2 border-2"
                 placeholder="••••••••"
               />
             </div>
@@ -154,13 +154,9 @@ const handleSubmit = async () => {
               class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
             />
             <label for="agree-terms" class="ml-2 block text-sm text-primary-700">
-              I agree to the
-              <a href="#" class="font-medium text-primary-600 hover:text-primary-500">
-                Terms and Conditions
-              </a>
-              and
-              <a href="#" class="font-medium text-primary-600 hover:text-primary-500">
-                Privacy Policy
+              Я согласен на
+              <a class="font-medium text-primary-600 hover:text-primary-500">
+                Обработку персональных данных
               </a>
             </label>
           </div>
@@ -196,7 +192,7 @@ const handleSubmit = async () => {
                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                 ></path>
               </svg>
-              {{ loading ? 'Creating your account...' : 'Create account' }}
+              {{ loading ? 'Создание учетной записи...' : 'Создать учетную запись' }}
             </button>
           </div>
         </form>
@@ -204,9 +200,9 @@ const handleSubmit = async () => {
 
         <div class="mt-6 text-center text-sm">
           <p class="text-primary-600">
-            Already have an account?
+            У вас уже есть учетная запись?
             <router-link to="/login" class="font-medium text-primary-700 hover:text-primary-800">
-              Sign in
+              Войти
             </router-link>
           </p>
         </div>

@@ -21,3 +21,8 @@
 body {
   @apply bg-primary-50 text-primary-900;
 }
+
+/* .input-field{
+  width: 100%;
+  padding: 50px;
+} */

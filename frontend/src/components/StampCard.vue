@@ -50,17 +50,6 @@ const rarityColor = computed(() => {
           <span class="mx-1">•</span>
           <span>{{ stamp.denomination }}</span>
         </div>
-        <p v-if="!compact" class="mt-2 text-sm text-primary-600 line-clamp-2">{{ stamp.description }}</p>
-        
-        <div v-if="!compact" class="mt-3 flex flex-wrap gap-1">
-          <span 
-            v-for="theme in stamp.themes" 
-            :key="theme" 
-            class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800"
-          >
-            {{ theme }}
-          </span>
-        </div>
       </div>
     </div>
   </router-link>

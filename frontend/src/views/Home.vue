@@ -70,7 +70,7 @@ onMounted(() => {
             :initial="{ opacity: 0, y: 20 }"
             :enter="{ opacity: 1, y: 0, transition: { duration: 600, delay: 400 } }"
           >
-            The premier platform for stamp collectors and philatelists. Discover, organize, and connect with fellow enthusiasts around the world.
+          Ведущая платформа для коллекционеров марок. Находите, организуйте и общайтесь с коллегами-энтузиастами.
           </p>
           
           <div 
@@ -86,13 +86,13 @@ onMounted(() => {
                   id="search" 
                   type="text" 
                   v-model="searchQuery"
-                  placeholder="Search for stamps, collections, or collectors..."
+                  placeholder="Поиск марок, коллекций или коллекционеров..."
                   class="block w-full px-4 py-3 rounded-md border-0 text-base text-primary-900 placeholder-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-300"
                 />
               </div>
               <div class="mt-3 sm:mt-0 sm:ml-3">
                 <button type="submit" class="block w-full bg-primary-500 py-3 px-4 rounded-md text-white font-medium hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-300">
-                  Search
+                  Поиск
                 </button>
               </div>
             </form>
@@ -105,9 +105,9 @@ onMounted(() => {
     <section class="py-12 sm:py-16 bg-primary-50">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center">
-          <h2 class="text-3xl font-bold tracking-tight text-primary-900 font-serif">Featured Stamps</h2>
+          <h2 class="text-3xl font-bold tracking-tight text-primary-900 font-serif">Популярные марки</h2>
           <p class="mt-3 max-w-2xl mx-auto text-lg text-primary-600">
-            Discover unique and valuable stamps from collectors around the world.
+            Откройте для себя уникальные и ценные марки от коллекционеров.
           </p>
         </div>
         
@@ -137,7 +137,7 @@ onMounted(() => {
         
         <div class="mt-12 text-center">
           <router-link to="/stamps" class="btn-secondary">
-            View all stamps
+            Посмотреть все марки
           </router-link>
         </div>
       </div>
@@ -147,9 +147,9 @@ onMounted(() => {
     <section class="py-12 sm:py-16 bg-white">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center">
-          <h2 class="text-3xl font-bold tracking-tight text-primary-900 font-serif">Curated Collections</h2>
+          <h2 class="text-3xl font-bold tracking-tight text-primary-900 font-serif">Хранящиеся коллекции</h2>
           <p class="mt-3 max-w-2xl mx-auto text-lg text-primary-600">
-            Explore themed collections curated by passionate philatelists.
+            Изучите тематические коллекции, созданные страстными филателистами.
           </p>
         </div>
         
@@ -179,7 +179,7 @@ onMounted(() => {
         
         <div class="mt-12 text-center">
           <router-link to="/collections" class="btn-secondary">
-            View all collections
+            Посмотреть все коллекции
           </router-link>
         </div>
       </div>
@@ -189,9 +189,9 @@ onMounted(() => {
     <section class="py-12 sm:py-16 bg-primary-50">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center">
-          <h2 class="text-3xl font-bold tracking-tight text-primary-900 font-serif">Notable Collectors</h2>
+          <h2 class="text-3xl font-bold tracking-tight text-primary-900 font-serif">Знаменитые коллекционеры</h2>
           <p class="mt-3 max-w-2xl mx-auto text-lg text-primary-600">
-            Connect with renowned philatelists and stamp collecting experts.
+            Узнайте известных филателистов и экспертов коллекционирования марок.
           </p>
         </div>
         
@@ -223,7 +223,7 @@ onMounted(() => {
         
         <div class="mt-12 text-center">
           <router-link to="/collectors" class="btn-secondary">
-            View all collectors
+            Посмотреть всех коллекционеров
           </router-link>
         </div>
       </div>

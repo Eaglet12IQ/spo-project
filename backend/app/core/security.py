@@ -1,11 +1,12 @@
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
-from jose import jwt, JWTError
+from jose import jwt, JWTError, ExpiredSignatureError
+from fastapi import HTTPException
 
 SECRET_KEY = "АФК ЛЕГЕНДА ДОТЫ"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
-REFRESH_TOKEN_EXPIRE_DAYS = 99999
+REFRESH_TOKEN_EXPIRE_DAYS = 7
 
 def create_access_token(data: dict):
     to_encode = data.copy()
@@ -27,6 +28,28 @@ def verify_refresh_token(token: str):
         return payload
     except JWTError:
         return None
+    
+def get_payload_from_refresh_token(request):
+    auth_header = request.headers.get("New-Access-Token")
+    if not auth_header:
+        auth_header = request.headers.get("Authorization")
+    
+    access_token = auth_header.split(" ")[1]
+
+    try:
+        payload = jwt.decode(
+            access_token,
+            SECRET_KEY,
+            algorithms=[ALGORITHM]
+        )
+    except ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Token expired")
+    except JWTError:
+        raise HTTPException(status_code=401, detail="Invalid token")
+    except Exception as e:
+        raise HTTPException(status_code=401, detail="Invalid token")
+    
+    return payload
 
 pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 

@@ -23,7 +23,7 @@ const router = createRouter({
     { path: '/', component: Home },
     { path: '/login', component: Login },
     { path: '/register', component: Register },
-    { path: '/profile', component: Profile },
+    { path: '/profiles/:collector_id', component: Profile },
     { path: '/stamps', component: Stamps },
     { path: '/stamps/:id', component: StampDetail },
     { path: '/collectors', component: Collectors },

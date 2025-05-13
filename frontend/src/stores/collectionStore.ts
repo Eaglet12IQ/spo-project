@@ -7,8 +7,8 @@ export const useCollectionStore = defineStore('collections', () => {
   const collections = ref<Collection[]>([
     {
       id: '1',
-      title: 'British Classics',
-      description: 'Classic stamps from Great Britain, including rare Victorian era pieces.',
+      title: 'Британская классика',
+      description: 'Классические марки Великобритании, включая редкие экземпляры викторианской эпохи.',
       coverImage: 'https://images.pexels.com/photos/7267684/pexels-photo-7267684.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
       ownerId: '1',
       createdAt: '2022-03-15',
@@ -20,8 +20,8 @@ export const useCollectionStore = defineStore('collections', () => {
     },
     {
       id: '2',
-      title: 'Aviation Marvels',
-      description: 'A collection dedicated to the history of aviation as depicted on postage stamps worldwide.',
+      title: 'Чудеса авиации',
+      description: 'Коллекция, посвященная истории авиации, изображенной на почтовых марках разных стран.',
       coverImage: 'https://images.pexels.com/photos/12605196/pexels-photo-12605196.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
       ownerId: '2',
       createdAt: '2021-07-22',

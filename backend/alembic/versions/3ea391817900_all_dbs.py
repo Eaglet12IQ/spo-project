@@ -41,6 +41,8 @@ def upgrade() -> None:
         ]
     )
 
+    op.execute(text("SELECT setval(pg_get_serial_sequence('roles', 'id'), (SELECT MAX(id) FROM roles))"))
+
     op.create_table('users',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('email', sa.String(), nullable=False),
@@ -74,6 +76,8 @@ def upgrade() -> None:
             }
         ]
     )
+
+    op.execute(text("SELECT setval(pg_get_serial_sequence('users', 'id'), (SELECT MAX(id) FROM users))"))
 
     op.create_table('collectors',
     sa.Column('user_id', sa.Integer(), nullable=False),

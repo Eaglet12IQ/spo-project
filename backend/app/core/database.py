@@ -6,7 +6,7 @@ SQLALCHEMY_DATABASE_URL = "postgresql://postgres:12345@localhost:5432/marki"  # 
 
 # Создайте движок для подключения к БД
 engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}  # Только для SQLite
+    SQLALCHEMY_DATABASE_URL
 )
 
 # Создайте фабрику сессий

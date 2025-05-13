@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, computed, onMounted, watch } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '../stores/authStore'
 import { useCollectionStore } from '../stores/collectionStore'
 import { useStampStore } from '../stores/stampStore'
@@ -8,6 +8,7 @@ import CollectionCard from '../components/CollectionCard.vue'
 import StampCard from '../components/StampCard.vue'
 
 const router = useRouter()
+const route = useRoute()
 const authStore = useAuthStore()
 const collectionStore = useCollectionStore()
 const stampStore = useStampStore()
@@ -15,7 +16,24 @@ const stampStore = useStampStore()
 const loading = ref(true)
 const activeTab = ref('collections')
 
-const user = computed(() => authStore.user)
+import type { Ref } from 'vue'
+
+interface UserProfile {
+  id: string
+  username: string
+  email: string
+  name: string
+  avatar: string
+  bio: string
+  location: string
+  memberSince: string
+  collectionCount: number
+  stampCount: number
+  following: number
+  followers: number
+}
+
+const user: Ref<UserProfile | null> = ref(null)
 const isAuthenticated = computed(() => authStore.isAuthenticated)
 
 const userCollections = computed(() => {
@@ -31,15 +49,41 @@ const setTab = (tab: string) => {
   activeTab.value = tab
 }
 
+const fetchProfile = async (collectorId: string) => {
+  loading.value = true
+  try {
+    const response = await fetch(`http://127.0.0.1:8000/api/profiles/${collectorId}`)
+    if (!response.ok) {
+      throw new Error('Failed to fetch profile')
+    }
+    const data = await response.json()
+    user.value = data
+  } catch (error) {
+    console.error(error)
+    router.push('/notfound')
+  } finally {
+    loading.value = false
+  }
+}
+
+watch(() => route.params.collector_id, (newId) => {
+  if (newId) {
+    fetchProfile(newId as string)
+  }
+}, { immediate: true })
+
 onMounted(() => {
   if (!isAuthenticated.value) {
     router.push('/login')
     return
   }
   
-  setTimeout(() => {
+  if (route.params.collector_id) {
+    fetchProfile(route.params.collector_id as string)
+  } else {
+    user.value = authStore.user
     loading.value = false
-  }, 500)
+  }
 })
 </script>
 
