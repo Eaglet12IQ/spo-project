@@ -1,12 +1,17 @@
 export interface User {
+  id: number
   username: string
   email: string
-  last_name: string
-  first_name: string
-  middle_name: string
+}
+
+export interface Profile {
+  id: number
+  username: string
   avatar_url: string
   country: string
-  phone_number: string
+  first_name: string
+  last_name: string
+  middle_name: string
   collections: Collection[]
 }
 
@@ -31,7 +36,7 @@ export interface Collection {
   id: string
   name: string
   description: string
-  stamps: Stamp[]
+  photo_url: string
 }
 
 export interface Collector {

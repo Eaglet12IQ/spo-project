@@ -10,6 +10,7 @@ class Collection(Base):
     collector_id = Column(Integer, ForeignKey("collectors.user_id"), nullable=False)
     name = Column(String(100), nullable=False)
     description = Column(String(500), nullable=True)
+    photo_url = Column(String, nullable=False, default="/static/avatars/default_avatar.png")
     
     # Связь один-к-одному с Stamp
     stamp = relationship("Stamp", back_populates="collection", uselist=False, cascade="all, delete-orphan")

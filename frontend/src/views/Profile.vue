@@ -6,7 +6,7 @@ import { useCollectionStore } from '../stores/collectionStore'
 import { useStampStore } from '../stores/stampStore'
 import CollectionCard from '../components/CollectionCard.vue'
 import StampCard from '../components/StampCard.vue'
-import {User} from '../types.ts'
+import {Profile} from '../types.ts'
 
 const router = useRouter()
 const route = useRoute()
@@ -19,19 +19,15 @@ const activeTab = ref('collections')
 
 import type { Ref } from 'vue'
 
-const user: Ref<User | null> = ref(null)
+const user: Ref<Profile | null> = ref(null)
+
+const isOwnProfile = computed(() => {
+  return user.value?.id === authStore.user?.id
+})
 
 const userCollections = computed(() => {
   return user.value?.collections || []
 })
-
-const userStamps = computed(() => {
-  return stampStore.stamps.slice(0, 4)
-})
-
-const setTab = (tab: string) => {
-  activeTab.value = tab
-}
 
 const fetchProfile = async (collectorId: string) => {
   loading.value = true
@@ -92,7 +88,9 @@ watch(() => route.params.collector_id, (newId) => {
               :initial="{ opacity: 0, y: 20 }"
               :enter="{ opacity: 1, y: 0, transition: { duration: 600, delay: 400 } }"
             >
-              {{ user?.last_name + " " + user?.first_name[0] + "." + " " + user?.middle_name[0] + "." }}
+              {{ user && user.last_name && user.first_name && user.middle_name 
+              ? user.last_name + " " + user.first_name[0] + "." + " " + user.middle_name[0] + "." 
+              : "Аноним" }}
             </h1>
             <p 
               class="text-primary-100 text-lg"
@@ -112,12 +110,14 @@ watch(() => route.params.collector_id, (newId) => {
                 <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
                 </svg>
-                {{ user?.country }}
+                {{ user && user.country 
+                ? user.country
+                : "Неизвестно" }}
               </span>
             </div>
           </div>
           <div class="mt-6 md:mt-0 md:ml-auto">
-            <button class="btn-secondary flex items-center">
+            <button class="btn-secondary flex items-center" v-if="isOwnProfile">
               <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path>
               </svg>
@@ -136,7 +136,7 @@ watch(() => route.params.collector_id, (newId) => {
           <!-- Collections tab -->
             <div class="flex justify-between items-center mb-6">
               <h2 class="text-2xl font-bold text-white font-serif">Collections</h2>
-              <button class="btn-primary flex items-center">
+              <button class="btn-primary flex items-center" v-if="isOwnProfile">
                 <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path>
                 </svg>

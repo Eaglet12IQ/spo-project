@@ -6,6 +6,27 @@ export const useAuthStore = defineStore('auth', () => {
   const user = ref<User | null>(null)
   const isAuthenticated = computed(() => !!user.value)
 
+  function initializeUserFromToken() {
+    const token = localStorage.getItem('access_token')
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]))
+        const userId = payload.user_id || payload.sub
+        // Здесь можно добавить дополнительные проверки токена, например, срок действия
+        user.value = {
+          id: userId,
+          username: payload.username || '',
+          email: payload.email || '',
+        }
+      } catch (error) {
+        console.error('Ошибка при декодировании токена:', error)
+        user.value = null
+      }
+    } else {
+      user.value = null
+    }
+  }
+
   async function login(identifier: string, password: string) {
     try {
       const response = await fetch('http://127.0.0.1:8000/api/auth/login', {
@@ -24,21 +45,12 @@ export const useAuthStore = defineStore('auth', () => {
       const data = await response.json()
 
       localStorage.setItem('access_token', data.access_token)
-
-      // Assuming backend returns user info along with tokens
+      const payload = JSON.parse(atob(data.access_token.split('.')[1]))
+      const userId = payload.user_id || payload.sub // зависит от бэка
       user.value = {
-        id: data.user_id,
+        id: userId,
         username: data.username,
         email: data.email,
-        name: data.username,
-        avatar: '',
-        bio: '',
-        location: '',
-        memberSince: '',
-        collectionCount: 0,
-        stampCount: 0,
-        following: 0,
-        followers: 0
       }
       return user.value
     } catch (error) {
@@ -68,19 +80,12 @@ export const useAuthStore = defineStore('auth', () => {
 
       const data = await response.json()
       localStorage.setItem('access_token', data.access_token)
+      const payload = JSON.parse(atob(data.access_token.split('.')[1]))
+      const userId = payload.user_id || payload.sub // зависит от бэка
       user.value = {
-        id: data.user_id,
+        id: userId,
         username: data.username,
         email: data.email,
-        name: data.username,
-        avatar: '',
-        bio: '',
-        location: '',
-        memberSince: '',
-        collectionCount: 0,
-        stampCount: 0,
-        following: 0,
-        followers: 0
       }
       return user.value
     } catch (error) {
@@ -114,5 +119,5 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  return { user, isAuthenticated, login, register, logout }
+  return { user, isAuthenticated, login, register, logout, initializeUserFromToken }
 })

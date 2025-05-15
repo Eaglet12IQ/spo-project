@@ -36,6 +36,13 @@ const router = createRouter({
 
 const app = createApp(App)
 app.use(router)
-app.use(createPinia())
+const pinia = createPinia()
+app.use(pinia)
 app.use(MotionPlugin)
+
+// Инициализация состояния пользователя из токена при загрузке приложения
+import { useAuthStore } from './stores/authStore'
+const authStore = useAuthStore()
+authStore.initializeUserFromToken()
+
 app.mount('#app')

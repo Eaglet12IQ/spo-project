@@ -32,8 +32,9 @@ class User(Base):
         
         response.delete_cookie(
             key="refresh_token",
-            secure=True,  # Обязательно, если кука устанавливалась с secure=True
+            secure=False,  # Обязательно, если кука устанавливалась с secure=True
             httponly=True,  # Если использовалось при установке
+            samesite="lax",  
         )
 
         db.delete(user)
@@ -65,13 +66,17 @@ class User(Base):
             key="refresh_token",
             value=refresh_token,
             httponly=True,
+            secure=False,  
+            samesite="lax",  
             max_age=REFRESH_TOKEN_EXPIRE_DAYS * 24 * 3600,
         )
 
         return {
             "message": "Пользователь авторизован.",
             "access_token": access_token,
-            "token_type": "bearer"
+            "token_type": "bearer",
+            "username": user_bd.username,
+            "email": user_bd.email
         }
     
     def logout(db: Session, request: Request, response: Response):
@@ -84,7 +89,9 @@ class User(Base):
         
         response.delete_cookie(
             key="refresh_token",
-            httponly=True,  # Если использовалось при установке
+            httponly=True,  # Если использовалось при установке 
+            samesite="lax",  
+            secure=False,  # Обязательно, если кука устанавливалась с secure=True
         )
 
         return {
@@ -126,11 +133,15 @@ class User(Base):
             key="refresh_token",
             value=refresh_token,
             httponly=True,
+            secure=False,
+            samesite="lax",  
             max_age=REFRESH_TOKEN_EXPIRE_DAYS * 24 * 3600,
         )
         
         return {
             "message": "Пользователь зарегистрирован и авторизован.",
             "access_token": access_token,
-            "token_type": "bearer"
+            "token_type": "bearer",
+            "username": db_user.username,
+            "email": db_user.email
         }

@@ -100,16 +100,12 @@ function navigateTo(route: string) {
             <template v-else>
               <div class="ml-3 relative">
                 <div>
-                  <button 
-                    @click="toggleUserMenu" 
-                    class="flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
-                  >
-                    <img 
-                      class="h-8 w-8 rounded-full object-cover"
-                      :src="user?.avatar" 
-                      alt="User avatar"
-                    />
-                  </button>
+<button 
+  @click="toggleUserMenu" 
+  class="flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+>
+  Profile
+</button>
                 </div>
                 
                 <div 
@@ -119,9 +115,9 @@ function navigateTo(route: string) {
                   :initial="{ opacity: 0, y: -10 }"
                   :enter="{ opacity: 1, y: 0, transition: { duration: 300 } }"
                 >
-                  <router-link to="/profile" class="block px-4 py-2 text-sm text-primary-700 hover:bg-primary-100" @click="closeMenus">
-                    Your Profile
-                  </router-link>
+<router-link :to="`/profiles/${user?.id}`" class="block px-4 py-2 text-sm text-primary-700 hover:bg-primary-100" @click="closeMenus">
+  Your Profile
+</router-link>
                   <a href="#" class="block px-4 py-2 text-sm text-primary-700 hover:bg-primary-100" @click="logout">
                     Sign out
                   </a>
@@ -212,15 +208,8 @@ function navigateTo(route: string) {
       <div class="pt-4 pb-3 border-t border-gray-200">
         <template v-if="isLoggedIn">
           <div class="flex items-center px-4">
-            <div class="flex-shrink-0">
-              <img 
-                class="h-10 w-10 rounded-full object-cover"
-                :src="user?.avatar" 
-                alt="User avatar"
-              />
-            </div>
             <div class="ml-3">
-              <div class="text-base font-medium text-primary-800">{{ user?.name }}</div>
+              <div class="text-base font-medium text-primary-800">{{ user?.username }}</div>
               <div class="text-sm font-medium text-primary-500">{{ user?.email }}</div>
             </div>
           </div>
