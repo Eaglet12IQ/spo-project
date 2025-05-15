@@ -5,15 +5,6 @@ import type { Collection } from '../types'
 const props = defineProps<{
   collection: Collection
 }>()
-
-const formattedDate = computed(() => {
-  const date = new Date(props.collection.updatedAt)
-  return new Intl.DateTimeFormat('en-US', { 
-    year: 'numeric', 
-    month: 'short', 
-    day: 'numeric' 
-  }).format(date)
-})
 </script>
 
 <template>
@@ -27,16 +18,12 @@ const formattedDate = computed(() => {
     >
       <div class="relative overflow-hidden aspect-video bg-gray-100">
         <img 
-          :src="collection.coverImage" 
-          :alt="collection.title" 
+          :alt="collection.name" 
           class="w-full h-full object-cover transition-transform duration-700 hover:scale-110"
         />
         <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
         <div class="absolute bottom-0 left-0 right-0 p-4">
-          <h3 class="text-xl font-serif font-semibold text-white drop-shadow-sm">{{ collection.title }}</h3>
-          <div class="flex items-center mt-1">
-            <span class="text-sm font-medium text-white/90">{{ collection.stampCount }} марок</span>
-          </div>
+          <h3 class="text-xl font-serif font-semibold text-white drop-shadow-sm">{{ collection.name }}</h3>
         </div>
       </div>
       <div class="p-4">

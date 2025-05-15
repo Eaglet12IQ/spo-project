@@ -1,35 +1,21 @@
 export interface User {
-  id: string
   username: string
   email: string
-  name: string
-  avatar: string
-  bio: string
-  location: string
-  memberSince: string
-  collectionCount: number
-  stampCount: number
-  following: number
-  followers: number
+  last_name: string
+  first_name: string
+  middle_name: string
+  avatar_url: string
+  country: string
+  phone_number: string
+  collections: Collection[]
 }
 
 export interface Stamp {
   id: string
-  title: string
-  image: string
+  name: string
   country: string
   year: number
-  denomination: string
-  color: string
-  condition: string
-  description: string
-  rarity: string
-  themes: string[]
-  dimensions: string
-  perforations: string
-  catalogNumber: string
-  estimatedValue: number
-  collectionId: string
+  image_url: string
 }
 
 export interface StampFilter {
@@ -43,16 +29,9 @@ export interface StampFilter {
 
 export interface Collection {
   id: string
-  title: string
+  name: string
   description: string
-  coverImage: string
-  ownerId: string
-  createdAt: string
-  updatedAt: string
-  isPublic: boolean
-  theme: string
-  stampCount: number
-  featured: boolean
+  stamps: Stamp[]
 }
 
 export interface Collector {
