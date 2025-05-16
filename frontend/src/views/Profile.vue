@@ -7,12 +7,19 @@ import { useStampStore } from '../stores/stampStore'
 import CollectionCard from '../components/CollectionCard.vue'
 import StampCard from '../components/StampCard.vue'
 import {Profile} from '../types.ts'
+import { fetchWithTokenCheck } from '../utils/http'
 
 const router = useRouter()
 const route = useRoute()
 const authStore = useAuthStore()
 const collectionStore = useCollectionStore()
 const stampStore = useStampStore()
+
+const goToAccountSettings = () => {
+  if (user.value?.id) {
+    router.push(`/settings`)
+  }
+}
 
 const loading = ref(true)
 const activeTab = ref('collections')
@@ -29,10 +36,49 @@ const userCollections = computed(() => {
   return user.value?.collections || []
 })
 
+// New ref for file input element
+const fileInputRef = ref<HTMLInputElement | null>(null)
+
+// Method to trigger file input click
+const onAvatarClick = () => {
+  if (isOwnProfile.value && fileInputRef.value) {
+    fileInputRef.value.click()
+  }
+}
+
+// Method to handle file selection and upload
+const onFileChange = async (event: Event) => {
+  const target = event.target as HTMLInputElement
+  if (!target.files || target.files.length === 0) return
+
+  const file = target.files[0]
+  const formData = new FormData()
+  formData.append('avatar', file)
+
+  try {
+    const response = await fetchWithTokenCheck('http://127.0.0.1:8000/api/profile/change_avatar', {
+      method: 'POST',
+      body: formData,
+      credentials: 'include' // send cookies if needed for auth
+    })
+    if (!response.ok) {
+      throw new Error('Failed to upload avatar')
+    }
+    const data = await response.json()
+    // Assuming the response contains the new avatar URL in data.avatar_url
+    if (data.avatar_url) {
+      user.value = { ...user.value, avatar_url: data.avatar_url }
+    }
+  } catch (error) {
+    console.error(error)
+    alert('Error uploading avatar')
+  }
+}
+
 const fetchProfile = async (collectorId: string) => {
   loading.value = true
   try {
-    const response = await fetch(`http://127.0.0.1:8000/api/profiles/${collectorId}`)
+    const response = await fetchWithTokenCheck(`http://127.0.0.1:8000/api/profiles/${collectorId}`)
     if (!response.ok) {
       throw new Error('Failed to fetch profile')
     }
@@ -75,10 +121,18 @@ watch(() => route.params.collector_id, (newId) => {
             <img 
               :src="user?.avatar_url" 
               :alt="user?.last_name" 
-              class="h-32 w-32 rounded-full border-4 border-white object-cover shadow-lg"
+              class="h-32 w-32 rounded-full border-4 border-white object-cover shadow-lg cursor-pointer"
               v-motion
               :initial="{ opacity: 0, scale: 0.8 }"
               :enter="{ opacity: 1, scale: 1, transition: { duration: 600, delay: 200 } }"
+              @click="onAvatarClick"
+            />
+            <input 
+              type="file" 
+              accept="image/*" 
+              ref="fileInputRef" 
+              class="hidden" 
+              @change="onFileChange"
             />
           </div>
           <div class="mt-6 md:mt-0 md:ml-8 text-center md:text-left">
@@ -117,7 +171,7 @@ watch(() => route.params.collector_id, (newId) => {
             </div>
           </div>
           <div class="mt-6 md:mt-0 md:ml-auto">
-            <button class="btn-secondary flex items-center" v-if="isOwnProfile">
+            <button class="btn-secondary flex items-center" v-if="isOwnProfile" @click="goToAccountSettings">
               <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path>
               </svg>

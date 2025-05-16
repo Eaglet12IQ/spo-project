@@ -17,6 +17,8 @@ import Collections from './views/Collections.vue'
 import CollectionDetail from './views/CollectionDetail.vue'
 import NotFound from './views/NotFound.vue'
 
+import AccountSettings from './views/AccountSettings.vue'
+
 const router = createRouter({
   history: createWebHistory(),
   routes: [
@@ -24,6 +26,7 @@ const router = createRouter({
     { path: '/login', component: Login },
     { path: '/register', component: Register },
     { path: '/profiles/:collector_id', component: Profile },
+    { path: '/settings', component: AccountSettings },
     { path: '/stamps', component: Stamps },
     { path: '/stamps/:id', component: StampDetail },
     { path: '/collectors', component: Collectors },

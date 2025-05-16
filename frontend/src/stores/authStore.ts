@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import type { User } from '../types'
+import { fetchWithTokenCheck } from '../utils/http'
 
 export const useAuthStore = defineStore('auth', () => {
   const user = ref<User | null>(null)
@@ -27,9 +28,25 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
+  function updateAccessToken(newToken: string) {
+    localStorage.setItem('access_token', newToken)
+    try {
+      const payload = JSON.parse(atob(newToken.split('.')[1]))
+      const userId = payload.user_id || payload.sub
+      user.value = {
+        id: userId,
+        username: payload.username || '',
+        email: payload.email || '',
+      }
+    } catch (error) {
+      console.error('Ошибка при декодировании нового токена:', error)
+      user.value = null
+    }
+  }
+
   async function login(identifier: string, password: string) {
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/auth/login', {
+      const response = await fetchWithTokenCheck('http://127.0.0.1:8000/api/auth/login', {
         method: 'POST',
         headers: {  
           'Content-Type': 'application/json'
@@ -60,7 +77,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function register(userData: { email: string, password: string, username: string }) {
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/auth/register', {
+      const response = await fetchWithTokenCheck('http://127.0.0.1:8000/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -97,7 +114,7 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       const token = localStorage.getItem('access_token')
 
-      const response = await fetch('http://127.0.0.1:8000/api/auth/logout', {
+      const response = await fetchWithTokenCheck('http://127.0.0.1:8000/api/auth/logout', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -119,5 +136,5 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  return { user, isAuthenticated, login, register, logout, initializeUserFromToken }
+  return { user, isAuthenticated, login, register, logout, initializeUserFromToken, updateAccessToken }
 })

@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey
 from fastapi import HTTPException, Response, Request
 from sqlalchemy.orm import relationship, Session
 from .base import Base
-from app.models.role import Role
+from app.models.role import Role # for model
 from app.models.collector import Collector
 from app.core.security import get_payload_from_refresh_token
 from app.schemas.user import UserLoginWithPasswordValidation, UserCreateWithPasswordValidation
@@ -145,3 +145,10 @@ class User(Base):
             "username": db_user.username,
             "email": db_user.email
         }
+    
+    def get_user(db: Session, user_id):
+        user = db.query(User).filter(User.id == user_id).first()
+        if not user:
+            raise HTTPException(status_code=400, detail="Пользователь не найден с таким ID!")
+        
+        return user

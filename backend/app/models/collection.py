@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, Session
 from .base import Base
-from app.models.stamp import Stamp
+from app.models.stamp import Stamp # for model
 
 class Collection(Base):
     __tablename__ = "collections"
@@ -17,3 +17,12 @@ class Collection(Base):
     
     # Связь с Collector (один-ко-многим)
     collector = relationship("Collector", back_populates="collections")
+
+    def get_collections(db: Session, collector_id):
+        collections = (
+            db.query(Collection)
+            .filter(Collection.collector_id == collector_id)
+            .all()
+        )
+
+        return collections

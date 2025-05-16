@@ -4,6 +4,11 @@ export interface User {
   email: string
 }
 
+export interface User_settings {
+  username: string
+  email: string
+}
+
 export interface Profile {
   id: number
   username: string
@@ -40,17 +45,9 @@ export interface Collection {
 }
 
 export interface Collector {
-  id: string
-  username: string
-  name: string
-  avatar: string
-  bio: string
-  location: string
-  memberSince: string
-  collectionCount: number
-  stampCount: number
-  specialties: string[]
-  following: number
-  followers: number
-  featured: boolean
+  country: string 
+  phone_number: string
+  first_name: string
+  last_name: string
+  middle_name: string
 }
