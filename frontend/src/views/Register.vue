@@ -49,7 +49,7 @@ const handleSubmit = async () => {
       password: userData.password
     })
     
-    router.push('/')
+    router.push(`/profiles/${authStore.user?.id}`)
   } catch (err) {
     error.value = 'Registration failed. Please try again.'
   } finally {

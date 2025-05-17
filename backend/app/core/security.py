@@ -30,7 +30,7 @@ def verify_refresh_token(token: str):
         return None
     
 def get_payload_from_refresh_token(request):
-    auth_header = request.headers.get("New-Access-Token")
+    auth_header = getattr(request.state, "token", None)
     if not auth_header:
         auth_header = request.headers.get("Authorization")
     

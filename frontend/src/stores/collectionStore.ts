@@ -2,49 +2,10 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import type { Collection } from '../types'
 import { useStampStore } from './stampStore'
+import { fetchWithTokenCheck } from '../utils/http'
 
 export const useCollectionStore = defineStore('collections', () => {
-  const collections = ref<Collection[]>([
-    {
-      id: '1',
-      title: 'Британская классика',
-      description: 'Классические марки Великобритании, включая редкие экземпляры викторианской эпохи.',
-      coverImage: 'https://images.pexels.com/photos/7267684/pexels-photo-7267684.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-      ownerId: '1',
-      createdAt: '2022-03-15',
-      updatedAt: '2023-11-05',
-      isPublic: true,
-      theme: 'Historical',
-      stampCount: 42,
-      featured: true
-    },
-    {
-      id: '2',
-      title: 'Чудеса авиации',
-      description: 'Коллекция, посвященная истории авиации, изображенной на почтовых марках разных стран.',
-      coverImage: 'https://images.pexels.com/photos/12605196/pexels-photo-12605196.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-      ownerId: '2',
-      createdAt: '2021-07-22',
-      updatedAt: '2023-12-01',
-      isPublic: true,
-      theme: 'Transportation',
-      stampCount: 87,
-      featured: true
-    },
-    {
-      id: '3',
-      title: 'Island Nations',
-      description: 'Rare and beautiful stamps from island nations around the world.',
-      coverImage: 'https://images.pexels.com/photos/19180878/pexels-photo-19180878/free-photo-of-vintage-mail-envelopes-with-postage-stamps.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-      ownerId: '3',
-      createdAt: '2022-01-10',
-      updatedAt: '2023-10-18',
-      isPublic: true,
-      theme: 'Geography',
-      stampCount: 63,
-      featured: false
-    }
-  ])
+  const collections = ref<Collection[]>([])
 
   const loading = ref(false)
 
@@ -66,12 +27,60 @@ export const useCollectionStore = defineStore('collections', () => {
     return collections.value.filter(collection => collection.ownerId === userId)
   }
 
+  async function createCollection(collectionData: { name: string; description: string; imageFile: File | null }) {
+    const formData = new FormData()
+    formData.append('name', collectionData.name)
+    formData.append('description', collectionData.description)
+    if (collectionData.imageFile) {
+      formData.append('image', collectionData.imageFile)
+    }
+
+    const token = localStorage.getItem('access_token')
+
+    const response = await fetchWithTokenCheck('http://127.0.0.1:8000/api/collections', {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
+      credentials: 'include'
+    })
+
+    if (!response.ok) {
+      throw new Error('Failed to create collection')
+    }
+
+    const createdCollection = await response.json()
+    collections.value.push(createdCollection)
+  }
+
+  async function fetchCollections() {
+    loading.value = true
+    try {
+      const response = await fetchWithTokenCheck('http://127.0.0.1:8000/api/collections', {
+        method: 'GET',
+        credentials: 'include'
+      })
+      if (!response.ok) {
+        throw new Error('Failed to fetch collections')
+      }
+      const data = await response.json()
+      collections.value = data
+    } catch (error) {
+      console.error(error)
+    } finally {
+      loading.value = false
+    }
+  }
+
   return {
     collections,
     loading,
     featuredCollections,
     getCollectionById,
     getCollectionStamps,
-    getUserCollections
+    getUserCollections,
+    createCollection,
+    fetchCollections
   }
 })

@@ -4,9 +4,13 @@ from sqlalchemy.orm import relationship, Session
 from .base import Base
 from app.models.role import Role # for model
 from app.models.collector import Collector
+import os
 from app.core.security import get_payload_from_refresh_token
 from app.schemas.user import UserLoginWithPasswordValidation, UserCreateWithPasswordValidation
 from app.core.security import verify_password, create_access_token, create_refresh_token, REFRESH_TOKEN_EXPIRE_DAYS, get_password_hash
+
+DEFAULT_AVATAR = "/static/avatars/default_avatar.png"  # путь по умолчанию
+AVATAR_FOLDER = os.path.join("static", "avatars")  # путь к папке с аватарками
 
 class User(Base):
     __tablename__ = "users"
@@ -19,16 +23,24 @@ class User(Base):
     
     # Связь "многие к одному" с ролями
     role = relationship("Role", back_populates="users")
-    collector = relationship("Collector", back_populates="user", uselist=False)
+    collector = relationship("Collector", back_populates="user", uselist=False, cascade="all, delete")  # <-- Add this)
 
     def delete(db: Session, response: Response, request: Request):
         payload = get_payload_from_refresh_token(request)
-
         access_user_id = payload.get("sub")
-        
-        user = db.query(User).filter(User.id == int(access_user_id)).first()
+        user = User.get_user(db, access_user_id)
+        collector = Collector.get_collector(db, access_user_id)
         if not user:
             raise HTTPException(status_code=401, detail="Пользователь не найден с таким ID!")
+        
+        if collector.avatar_url and collector.avatar_url != DEFAULT_AVATAR:
+            avatar_filename = os.path.basename(collector.avatar_url)  # извлекаем имя файла
+            avatar_path = os.path.join(AVATAR_FOLDER, avatar_filename)
+            if os.path.exists(avatar_path):
+                try:
+                    os.remove(avatar_path)
+                except Exception as e:
+                    raise HTTPException(status_code=500, detail=f"Ошибка при удалении аватарки: {str(e)}")
         
         response.delete_cookie(
             key="refresh_token",

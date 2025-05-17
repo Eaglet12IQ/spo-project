@@ -53,12 +53,16 @@ const onFileChange = async (event: Event) => {
 
   const file = target.files[0]
   const formData = new FormData()
-  formData.append('avatar', file)
+  formData.append('file', file)
 
   try {
-    const response = await fetchWithTokenCheck('http://127.0.0.1:8000/api/profile/change_avatar', {
-      method: 'POST',
+    const token = localStorage.getItem('access_token')
+    const response = await fetchWithTokenCheck(`http://127.0.0.1:8000/api/settings/avatar`, {
+      method: 'PATCH',
       body: formData,
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
       credentials: 'include' // send cookies if needed for auth
     })
     if (!response.ok) {
@@ -66,8 +70,11 @@ const onFileChange = async (event: Event) => {
     }
     const data = await response.json()
     // Assuming the response contains the new avatar URL in data.avatar_url
-    if (data.avatar_url) {
-      user.value = { ...user.value, avatar_url: data.avatar_url }
+    if (data.avatar_url && user.value) {
+      user.value = {
+        ...user.value,
+        avatar_url: `${data.avatar_url}?t=${Date.now()}` // 👈 добавляем временной параметр
+      }
     }
   } catch (error) {
     console.error(error)
@@ -90,6 +97,10 @@ const fetchProfile = async (collectorId: string) => {
   } finally {
     loading.value = false
   }
+}
+
+const goToCreateCollection = () => {
+  router.push('/collections/create')
 }
 
 watch(() => route.params.collector_id, (newId) => {
@@ -121,6 +132,7 @@ watch(() => route.params.collector_id, (newId) => {
             <img 
               :src="user?.avatar_url" 
               :alt="user?.last_name" 
+              :key="user?.avatar_url"
               class="h-32 w-32 rounded-full border-4 border-white object-cover shadow-lg cursor-pointer"
               v-motion
               :initial="{ opacity: 0, scale: 0.8 }"
@@ -190,7 +202,7 @@ watch(() => route.params.collector_id, (newId) => {
           <!-- Collections tab -->
             <div class="flex justify-between items-center mb-6">
               <h2 class="text-2xl font-bold text-white font-serif">Collections</h2>
-              <button class="btn-primary flex items-center" v-if="isOwnProfile">
+              <button class="btn-primary flex items-center" v-if="isOwnProfile" @click="goToCreateCollection">
                 <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path>
                 </svg>
@@ -217,7 +229,7 @@ watch(() => route.params.collector_id, (newId) => {
               <h3 class="mt-2 text-lg font-medium text-primary-900">No collections yet</h3>
             </div>
             
-            <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
               <CollectionCard 
                 v-for="collection in userCollections" 
                 :key="collection.id" 

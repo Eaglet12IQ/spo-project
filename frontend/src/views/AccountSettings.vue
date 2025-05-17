@@ -29,13 +29,28 @@ const fetchProfileData = async () => {
   error.value = ''
   try {
     // Fetch user data
-    const userResponse = await fetchWithTokenCheck(`http://127.0.0.1:8000/api/users/${authStore.user?.id}`)
+    const token = localStorage.getItem('access_token')
+    const userResponse = await fetchWithTokenCheck(`http://127.0.0.1:8000/api/settings/user`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include'  // ⬅️ ОБЯЗАТЕЛЬНО
+    })
     if (!userResponse.ok) throw new Error('Failed to fetch user data')
     const userData = await userResponse.json()
     Object.assign(user, userData)
 
     // Fetch collector data
-    const collectorResponse = await fetchWithTokenCheck(`http://127.0.0.1:8000/api/collectors/${authStore.user?.id}`)
+    const collectorResponse = await fetchWithTokenCheck(`http://127.0.0.1:8000/api/settings/collector`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include'  // ⬅️ ОБЯЗАТЕЛЬНО
+    })
     if (!collectorResponse.ok) throw new Error('Failed to fetch collector data')
     const collectorData = await collectorResponse.json()
     Object.assign(collector, collectorData)
@@ -72,6 +87,34 @@ const updateProfile = async () => {
 
     alert('Profile updated successfully')
     router.push(`/profiles/${authStore.user?.id}`)
+  } catch (err) {
+    error.value = (err as Error).message
+  }
+}
+
+const deleteAccount = async () => {
+  if (!confirm('Вы уверены, что хотите удалить аккаунт? Это действие необратимо.')) {
+    return
+  }
+  error.value = ''
+  try {
+    const token = localStorage.getItem('access_token')
+    const response = await fetchWithTokenCheck('http://127.0.0.1:8000/api/auth/delete', {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include'
+    })
+    if (!response.ok) {
+      const errorData = await response.json()
+      throw new Error(errorData.detail || 'Ошибка при удалении аккаунта')
+    }
+    alert('Аккаунт успешно удален')
+    authStore.user = null
+    localStorage.removeItem('access_token')
+    router.push('/register')
   } catch (err) {
     error.value = (err as Error).message
   }
@@ -122,6 +165,8 @@ const updateProfile = async () => {
 
       <button type="submit" class="btn-primary">Сохранить настройки</button>
     </form>
+
+    <button @click="deleteAccount" class="btn-danger mt-6">Удалить аккаунт</button>
   </div>
 </template>
 
@@ -131,5 +176,18 @@ const updateProfile = async () => {
   padding: 0.5rem;
   border: 1px solid #ccc;
   border-radius: 4px;
+}
+
+.btn-danger {
+  background-color: #dc2626;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-danger:hover {
+  background-color: #b91c1c;
 }
 </style>

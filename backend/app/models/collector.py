@@ -7,7 +7,7 @@ from fastapi import HTTPException
 class Collector(Base):
     __tablename__ = "collectors"
 
-    user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), primary_key=True)
     avatar_url = Column(String, nullable=False, default="/static/avatars/default_avatar.png")
     country = Column(String(50), nullable=True)
     phone_number = Column(String(20), nullable=True)

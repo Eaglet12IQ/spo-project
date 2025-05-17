@@ -18,6 +18,7 @@ const props = defineProps<{
     >
       <div class="relative overflow-hidden aspect-video bg-gray-100">
         <img 
+          :src="collection.photo_url || '/static/avatars/default_avatar.png'"
           :alt="collection.name" 
           class="w-full h-full object-cover transition-transform duration-700 hover:scale-110"
         />
