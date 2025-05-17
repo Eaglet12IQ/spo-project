@@ -57,28 +57,28 @@ function navigateTo(route: string) {
               class="border-transparent text-primary-700 hover:text-primary-900 hover:border-primary-500 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
               :class="{ 'border-primary-500': $route.path === '/' }"
             >
-              Home
+              Главная
             </router-link>
             <router-link 
               to="/stamps" 
               class="border-transparent text-primary-700 hover:text-primary-900 hover:border-primary-500 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
               :class="{ 'border-primary-500': $route.path === '/stamps' }"
             >
-              Stamps
+              Марки
             </router-link>
             <router-link 
               to="/collections" 
               class="border-transparent text-primary-700 hover:text-primary-900 hover:border-primary-500 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
               :class="{ 'border-primary-500': $route.path === '/collections' }"
             >
-              Collections
+              Коллекции
             </router-link>
             <router-link 
               to="/collectors" 
               class="border-transparent text-primary-700 hover:text-primary-900 hover:border-primary-500 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
               :class="{ 'border-primary-500': $route.path === '/collectors' }"
             >
-              Collectors
+              Коллекционеры
             </router-link>
           </div>
         </div>
@@ -89,10 +89,10 @@ function navigateTo(route: string) {
             <!-- Not logged in -->
             <template v-if="!isLoggedIn">
               <router-link to="/login" class="text-primary-700 hover:text-primary-900 px-3 py-2 text-sm font-medium">
-                Log in
+                Вход
               </router-link>
               <router-link to="/register" class="btn-primary ml-3">
-                Register
+                Регистрация
               </router-link>
             </template>
             
@@ -104,7 +104,7 @@ function navigateTo(route: string) {
   @click="toggleUserMenu" 
   class="flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
 >
-  Profile
+  {{ user?.username }}
 </button>
                 </div>
                 
@@ -116,10 +116,10 @@ function navigateTo(route: string) {
                   :enter="{ opacity: 1, y: 0, transition: { duration: 300 } }"
                 >
 <router-link :to="`/profiles/${user?.id}`" class="block px-4 py-2 text-sm text-primary-700 hover:bg-primary-100" @click="closeMenus">
-  Your Profile
+  Профиль
 </router-link>
                   <a href="#" class="block px-4 py-2 text-sm text-primary-700 hover:bg-primary-100" @click="logout">
-                    Sign out
+                    Выход
                   </a>
                 </div>
               </div>

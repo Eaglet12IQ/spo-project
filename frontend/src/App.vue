@@ -12,7 +12,7 @@ watch(() => route.path, (path) => {
 }, { immediate: true })
 
 onMounted(() => {
-  document.title = 'PhilateList - Stamp Collection Platform'
+  document.title = 'PhilateList'
 })
 </script>
 

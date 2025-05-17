@@ -69,4 +69,18 @@ async def get_collections(db: Session = Depends(get_db)):
 
     return serialized_collections
 
+@router.get("/{collection_id}")
+async def get_collection_by_id(collection_id: str, db: Session = Depends(get_db)):
+    collection = db.query(Collection).filter(Collection.id == collection_id).first()
+    if not collection:
+        raise HTTPException(status_code=404, detail="Collection not found")
+
+    return {
+        "id": collection.id,
+        "collector_id": collection.collector_id,
+        "name": collection.name,
+        "description": collection.description,
+        "photo_url": f"http://localhost:8000{collection.photo_url}"
+    }
+
 

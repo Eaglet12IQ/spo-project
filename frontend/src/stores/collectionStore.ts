@@ -37,7 +37,7 @@ export const useCollectionStore = defineStore('collections', () => {
 
     const token = localStorage.getItem('access_token')
 
-    const response = await fetchWithTokenCheck('http://127.0.0.1:8000/api/collections', {
+    const response = await fetchWithTokenCheck('http://127.0.0.1:8000/api/collections/create', {
       method: 'POST',
       body: formData,
       headers: {

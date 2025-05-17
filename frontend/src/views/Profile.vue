@@ -187,7 +187,7 @@ watch(() => route.params.collector_id, (newId) => {
               <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path>
               </svg>
-              Edit Profile
+              Настройки
             </button>
           </div>
         </div>
@@ -201,12 +201,12 @@ watch(() => route.params.collector_id, (newId) => {
         <!-- Tab content -->
           <!-- Collections tab -->
             <div class="flex justify-between items-center mb-6">
-              <h2 class="text-2xl font-bold text-white font-serif">Collections</h2>
+              <h2 class="text-2xl font-bold text-white font-serif">Коллекции</h2>
               <button class="btn-primary flex items-center" v-if="isOwnProfile" @click="goToCreateCollection">
                 <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path>
                 </svg>
-                New Collection
+                Создать коллекцию
               </button>
             </div>
             
@@ -226,7 +226,7 @@ watch(() => route.params.collector_id, (newId) => {
               <svg class="mx-auto h-12 w-12 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
               </svg>
-              <h3 class="mt-2 text-lg font-medium text-primary-900">No collections yet</h3>
+              <h3 class="mt-2 text-lg font-medium text-primary-900">Нет коллекций</h3>
             </div>
             
             <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
