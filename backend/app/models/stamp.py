@@ -18,5 +18,5 @@ class Stamp(Base):
     photo_url = Column(String, nullable=False, default="/static/avatars/default_avatar.png")
     
     # Связь один-к-одному с Collection
-    collection_id = Column(Integer, ForeignKey("collections.id"), unique=True)  # Уникальный внешний ключ
-    collection = relationship("Collection", back_populates="stamp", uselist=False)
+    collection_id = Column(Integer, ForeignKey("collections.id"))
+    collection = relationship("Collection", back_populates="stamps")

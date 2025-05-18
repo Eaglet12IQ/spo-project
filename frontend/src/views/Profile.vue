@@ -154,8 +154,8 @@ watch(() => route.params.collector_id, (newId) => {
               :initial="{ opacity: 0, y: 20 }"
               :enter="{ opacity: 1, y: 0, transition: { duration: 600, delay: 400 } }"
             >
-              {{ user && user.last_name && user.first_name && user.middle_name 
-              ? user.last_name + " " + user.first_name[0] + "." + " " + user.middle_name[0] + "." 
+              {{ user && user.last_name && user.first_name 
+              ? user.last_name + " " + user.first_name[0] + "."
               : "Аноним" }}
             </h1>
             <p 

@@ -3,116 +3,7 @@ import { ref, computed } from 'vue'
 import type { Stamp, StampFilter } from '../types'
 
 export const useStampStore = defineStore('stamps', () => {
-  const stamps = ref<Stamp[]>([
-    {
-      id: '1',
-      title: 'Penny Black',
-      image: 'https://upload.wikimedia.org/wikipedia/commons/3/36/Penny_black.jpg',
-      country: 'Великобритания',
-      year: 1840,
-      denomination: '2000$',
-      color: 'Black',
-      condition: 'Mint',
-      description: 'The Penny Black was the world\'s first adhesive postage stamp used in a public postal system. It was first issued in the United Kingdom on 1 May 1840, for official use from 6 May of that year.',
-      rarity: 'Редкая',
-      themes: ['Historic', 'First Issue'],
-      dimensions: '19mm × 22mm',
-      perforations: 'Imperforate',
-      catalogNumber: 'SG1',
-      estimatedValue: 2000,
-      collectionId: '1'
-    },
-    {
-      id: '2',
-      title: 'Inverted Jenny',
-      image: 'https://upload.wikimedia.org/wikipedia/commons/6/6f/US_Airmail_inverted_Jenny_24c_1918_issue.jpg',
-      country: 'США',
-      year: 1918,
-      denomination: '1000000$',
-      color: 'Red and Blue',
-      condition: 'Fine',
-      description: 'The Inverted Jenny is one of the world\'s most famous stamp errors, showing a Curtiss JN-4 airplane printed upside-down. Only 100 copies are known to exist.',
-      rarity: 'Редкая ',
-      themes: ['Aviation', 'Error'],
-      dimensions: '22mm × 25mm',
-      perforations: 'Perf 11',
-      catalogNumber: 'US C3a',
-      estimatedValue: 1000000,
-      collectionId: '2'
-    },
-    {
-      id: '3',
-      title: 'Blue Mauritius',
-      image: 'https://avatars.mds.yandex.net/i?id=08db0a8d7ecab32f2dd2546435690fc91cfc1c7c-9035616-images-thumbs&n=13',
-      country: 'Маврикий',
-      year: 1847,
-      denomination: '1500000$',
-      color: 'Blue',
-      condition: 'Used',
-      description: 'The Blue Mauritius is one of the rarest and most valuable stamps in the world. The stamp reads "Post Office" instead of "Post Paid".',
-      rarity: 'Редкая',
-      themes: ['Colonial', 'Queen Victoria'],
-      dimensions: '18mm × 20mm',
-      perforations: 'Imperforate',
-      catalogNumber: 'Mauritius PO2',
-      estimatedValue: 1500000,
-      collectionId: '3'
-    },
-    {
-      id: '4',
-      title: 'Treskilling Yellow',
-      image: 'https://images.pexels.com/photos/12605196/pexels-photo-12605196.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-      country: 'Sweden',
-      year: 1855,
-      denomination: '3 Skilling',
-      color: 'Yellow (Error)',
-      condition: 'Fine Used',
-      description: 'The Treskilling Yellow is a Swedish postage stamp that was mistakenly printed in yellow instead of green. Only one example is known to exist.',
-      rarity: 'Unique',
-      themes: ['Error', 'European'],
-      dimensions: '19mm × 21mm',
-      perforations: 'Imperforate',
-      catalogNumber: 'Sweden 3',
-      estimatedValue: 2500000,
-      collectionId: '1'
-    },
-    {
-      id: '5',
-      title: 'Basel Dove',
-      image: 'https://images.pexels.com/photos/12094618/pexels-photo-12094618.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-      country: 'Switzerland',
-      year: 1845,
-      denomination: '2½ Rappen',
-      color: 'Red, Blue, and Black',
-      condition: 'Very Fine',
-      description: 'The Basel Dove was the first tricolor stamp in the world, showing a white embossed dove carrying a letter in its beak.',
-      rarity: 'High',
-      themes: ['Bird', 'Swiss'],
-      dimensions: '21mm × 24mm',
-      perforations: 'Imperforate',
-      catalogNumber: 'Basel 1',
-      estimatedValue: 75000,
-      collectionId: '2'
-    },
-    {
-      id: '6',
-      title: 'Hawaiian Missionaries',
-      image: 'https://images.pexels.com/photos/18932766/pexels-photo-18932766/free-photo-of-old-envelopes-with-stamps.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-      country: 'Hawaii',
-      year: 1851,
-      denomination: '2 Cents',
-      color: 'Blue',
-      condition: 'Fine',
-      description: 'The Hawaiian Missionaries were the first stamps issued by Hawaii, mainly used for mail sent by American missionaries in the islands.',
-      rarity: 'Extremely High',
-      themes: ['American', 'Colonial'],
-      dimensions: '20mm × 23mm',
-      perforations: 'Imperforate',
-      catalogNumber: 'Hawaii 1',
-      estimatedValue: 760000,
-      collectionId: '3'
-    }
-  ])
+  const stamps = ref<Stamp[]>([])
 
   const loading = ref(false)
   const filters = ref<StampFilter>({
@@ -127,8 +18,8 @@ export const useStampStore = defineStore('stamps', () => {
   const filteredStamps = computed(() => {
     return stamps.value.filter(stamp => {
       // Search filter
-      if (filters.value.search && !stamp.title.toLowerCase().includes(filters.value.search.toLowerCase()) && 
-          !stamp.description.toLowerCase().includes(filters.value.search.toLowerCase())) {
+      if (filters.value.search && !stamp.name.toLowerCase().includes(filters.value.search.toLowerCase()) && 
+          !(stamp.features?.toLowerCase().includes(filters.value.search.toLowerCase()) || stamp.topic?.toLowerCase().includes(filters.value.search.toLowerCase()))) {
         return false
       }
       
@@ -146,7 +37,7 @@ export const useStampStore = defineStore('stamps', () => {
       }
       
       // Themes filter
-      if (filters.value.themes.length > 0 && !filters.value.themes.some(theme => stamp.themes.includes(theme))) {
+      if (filters.value.themes.length > 0 && !filters.value.themes.some((theme: string) => stamp.topic?.includes(theme))) {
         return false
       }
       
@@ -159,6 +50,62 @@ export const useStampStore = defineStore('stamps', () => {
     })
   })
 
+async function fetchStampById(id: string) {
+    loading.value = true
+    try {
+      const response = await fetch(`http://localhost:8000/api/stamps/${id}`)
+      if (!response.ok) {
+        throw new Error('Failed to fetch stamp')
+      }
+      const data = await response.json()
+      // Update or add the stamp in the stamps array
+      const index = stamps.value.findIndex(stamp => stamp.id === data.id)
+      if (index !== -1) {
+        stamps.value[index] = data
+      } else {
+        stamps.value.push(data)
+      }
+      return data
+    } finally {
+      loading.value = false
+    }
+  }
+
+  async function deleteStamp(id: string) {
+    loading.value = true
+    try {
+      const token = localStorage.getItem('access_token')
+      const response = await fetch(`http://localhost:8000/api/stamps/delete/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        credentials: 'include'
+      })
+      if (!response.ok) {
+        throw new Error('Failed to delete stamp')
+      }
+      // Remove deleted stamp from stamps array
+      stamps.value = stamps.value.filter(stamp => stamp.id !== id)
+    } finally {
+      loading.value = false
+    }
+  }
+
+  async function fetchStamps() {
+    loading.value = true
+    try {
+      const response = await fetch('http://localhost:8000/api/stamps')
+      if (!response.ok) {
+        throw new Error('Failed to fetch stamps')
+      }
+      const data = await response.json()
+      stamps.value = data
+    } finally {
+      loading.value = false
+    }
+  }
+
   function getStampById(id: string) {
     return stamps.value.find(stamp => stamp.id === id)
   }
@@ -170,7 +117,7 @@ export const useStampStore = defineStore('stamps', () => {
     return stamps.value
       .filter(s => s.id !== stampId && 
                (s.country === stamp.country || 
-                s.themes.some(theme => stamp.themes.includes(theme))))
+                (s.topic && stamp.topic && s.topic === stamp.topic)))
       .slice(0, limit)
   }
 
@@ -189,6 +136,90 @@ export const useStampStore = defineStore('stamps', () => {
     }
   }
 
+  async function createStamp(collectionId: string, stampData: any, imageFile: File) {
+    loading.value = true
+    try {
+      const formData = new FormData()
+      formData.append('name', stampData.name)
+      formData.append('serial_number', stampData.serial_number || '')
+      formData.append('country', stampData.country)
+      formData.append('year', stampData.year.toString())
+      if (stampData.circulation !== null && stampData.circulation !== undefined) {
+        formData.append('circulation', stampData.circulation.toString())
+      }
+      if (stampData.cost !== null && stampData.cost !== undefined) {
+        formData.append('cost', stampData.cost.toString())
+      }
+      formData.append('perforation', stampData.perforation || '')
+      formData.append('topic', stampData.topic || '')
+      formData.append('features', stampData.features || '')
+      formData.append('image', imageFile)
+      formData.append('collection_id', collectionId)
+
+      const token = localStorage.getItem('access_token')
+
+      const response = await fetch(`http://127.0.0.1:8000/api/stamps/create`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        credentials: 'include'
+      })
+      if (!response.ok) {
+        throw new Error('Failed to create stamp')
+      }
+      const data = await response.json()
+      stamps.value.push(data)
+      return data
+    } finally {
+      loading.value = false
+    }
+  }
+
+  async function updateStamp(stampId: number, stampData: { name: string; serial_number: string; country: string; year: number; circulation: number; cost: number; perforation: string; topic: string; features: string; imageFile: File | null }) {
+    const formData = new FormData()
+    formData.append('name', stampData.name)
+    formData.append('serial_number', stampData.serial_number)
+    formData.append('country', stampData.country)
+    formData.append('year', stampData.year.toString())
+    formData.append('circulation', stampData.circulation.toString())
+    formData.append('cost', stampData.cost.toString())
+    formData.append('perforation', stampData.perforation)
+    formData.append('topic', stampData.topic)
+    formData.append('features', stampData.features)
+    if (stampData.imageFile) {
+      formData.append('image', stampData.imageFile)
+    }
+
+    const token = localStorage.getItem('access_token')
+
+    const response = await fetch(`http://127.0.0.1:8000/api/stamps/update/${stampId}`, {
+      method: 'PUT',
+      body: formData,
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
+      credentials: 'include'
+    })
+
+    if (!response.ok) {
+      throw new Error('Failed to update stamp')
+    }
+
+    const updatedStamp = await response.json()
+    // Update the stamp in stamps array
+    const index = stamps.value.findIndex(s => s.id === updatedStamp.id)
+    if (index !== -1) {
+      stamps.value[index] = updatedStamp
+    }
+    // Remove or comment out the following lines because currentStamp is not defined
+    // if (currentStamp.value?.id === updatedStamp.id) {
+    //   currentStamp.value = updatedStamp
+    // }
+    return updatedStamp
+  }
+
   return { 
     stamps, 
     loading, 
@@ -197,6 +228,11 @@ export const useStampStore = defineStore('stamps', () => {
     getStampById,
     getRelatedStamps,
     setFilter,
-    resetFilters
+    resetFilters,
+    fetchStampById,
+    fetchStamps,
+    createStamp,
+    updateStamp,
+    deleteStamp
   }
 })

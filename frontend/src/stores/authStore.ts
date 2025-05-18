@@ -14,11 +14,11 @@ export const useAuthStore = defineStore('auth', () => {
         const payload = JSON.parse(atob(token.split('.')[1]))
         const userId = payload.user_id || payload.sub
         // Здесь можно добавить дополнительные проверки токена, например, срок действия
-        user.value = {
-          id: userId,
-          username: payload.username || '',
-          email: payload.email || '',
-        }
+      user.value = {
+        id: userId,
+        username: payload.username || '',
+        email: payload.email || '',
+      }
       } catch (error) {
         console.error('Ошибка при декодировании токена:', error)
         user.value = null

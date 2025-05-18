@@ -21,11 +21,7 @@ import StampCard from '../components/StampCard.vue'
 
 const stampStore = useStampStore()
 
-onMounted(() => {
-  // Убедимся, что массив реально заполняется:
-  console.log('stamps in store:', stampStore.stamps)
-  
-  // Если вы планировали загружать данные асинхронно — раскомментируйте:
-  // await stampStore.fetchStamps()
+onMounted(async () => {
+  await stampStore.fetchStamps()
 })
 </script>

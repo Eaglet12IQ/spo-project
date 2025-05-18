@@ -10,8 +10,13 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted } from 'vue'
 import { useCollectorStore } from '../stores/collectorStore'
 import CollectorCard from '../components/CollectorCard.vue'
 
 const collectorStore = useCollectorStore()
+
+onMounted(() => {
+  collectorStore.fetchCollectors()
+})
 </script>

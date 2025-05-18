@@ -13,7 +13,7 @@ class Collection(Base):
     photo_url = Column(String, nullable=False, default="/static/avatars/default_avatar.png")
     
     # Связь один-к-одному с Stamp
-    stamp = relationship("Stamp", back_populates="collection", uselist=False, cascade="all, delete-orphan")
+    stamps = relationship("Stamp", back_populates="collection", cascade="all, delete-orphan")
     
     # Связь с Collector (один-ко-многим)
     collector = relationship("Collector", back_populates="collections")

@@ -176,7 +176,7 @@ function navigateTo(route: string) {
           :class="$route.path === '/' ? 'border-primary-500 bg-primary-50' : 'border-transparent'"
           @click="closeMenus"
         >
-          Home
+          Главная
         </router-link>
         <router-link 
           to="/stamps" 
@@ -184,7 +184,7 @@ function navigateTo(route: string) {
           :class="$route.path === '/stamps' ? 'border-primary-500 bg-primary-50' : 'border-transparent'"
           @click="closeMenus"
         >
-          Stamps
+          Марки
         </router-link>
         <router-link 
           to="/collections" 
@@ -192,7 +192,7 @@ function navigateTo(route: string) {
           :class="$route.path === '/collections' ? 'border-primary-500 bg-primary-50' : 'border-transparent'"
           @click="closeMenus"
         >
-          Collections
+          Коллекции
         </router-link>
         <router-link 
           to="/collectors" 
@@ -200,7 +200,7 @@ function navigateTo(route: string) {
           :class="$route.path === '/collectors' ? 'border-primary-500 bg-primary-50' : 'border-transparent'"
           @click="closeMenus"
         >
-          Collectors
+          Коллекционеры
         </router-link>
       </div>
       
@@ -219,14 +219,14 @@ function navigateTo(route: string) {
               class="block px-4 py-2 text-base font-medium text-primary-700 hover:text-primary-900 hover:bg-primary-50"
               @click="closeMenus"
             >
-              Your Profile
+              Профиль
             </router-link>
             <a 
               href="#" 
               class="block px-4 py-2 text-base font-medium text-primary-700 hover:text-primary-900 hover:bg-primary-50"
               @click="logout"
             >
-              Sign out
+              Выход
             </a>
           </div>
         </template>
@@ -237,14 +237,14 @@ function navigateTo(route: string) {
               class="w-full text-center text-primary-700 hover:text-primary-900 px-3 py-2 text-base font-medium border border-primary-300 rounded-md"
               @click="closeMenus"
             >
-              Log in
+              Вход
             </router-link>
             <router-link 
               to="/register" 
               class="w-full text-center bg-primary-700 hover:bg-primary-800 text-white px-3 py-2 text-base font-medium rounded-md"
               @click="closeMenus"
             >
-              Register
+              Регистрация
             </router-link>
           </div>
         </template>

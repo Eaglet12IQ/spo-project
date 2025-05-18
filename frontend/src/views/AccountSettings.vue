@@ -70,18 +70,27 @@ const specialtiesInput = ref('')
 const updateProfile = async () => {
   error.value = ''
   try {
+    const token = localStorage.getItem('access_token')
     // Update user data
-    const userUpdateResponse = await fetchWithTokenCheck(`http://127.0.0.1:8000/api/users/${authStore.user?.id}`, {
+    const userUpdateResponse = await fetchWithTokenCheck(`http://127.0.0.1:8000/api/profiles/users/${authStore.user?.id}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(user)
+      headers: {  
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(user),
+      credentials: 'include'  // ⬅️ ОБЯЗАТЕЛЬНО
     })
     if (!userUpdateResponse.ok) throw new Error('Failed to update user data')
 
-    const collectorUpdateResponse = await fetchWithTokenCheck(`http://127.0.0.1:8000/api/collectors/${authStore.user?.id}`, {
+    const collectorUpdateResponse = await fetchWithTokenCheck(`http://127.0.0.1:8000/api/profiles/collectors/${authStore.user?.id}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(collector)
+      headers: {  
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(collector),
+      credentials: 'include'  // ⬅️ ОБЯЗАТЕЛЬНО
     })
     if (!collectorUpdateResponse.ok) throw new Error('Failed to update collector data')
 

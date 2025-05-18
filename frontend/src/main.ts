@@ -37,6 +37,9 @@ const router = createRouter({
     { path: '/collections', component: Collections },
     { path: '/collections/create', component: CreateCollection, meta: { requiresAuth: true } },
     { path: '/collections/:id', component: CollectionDetail },
+    { path: '/collections/:id/create-stamp', component: () => import('./views/CreateStamp.vue'), meta: { requiresAuth: true } },
+    { path: '/collections/:id/edit', component: () => import('./views/EditCollection.vue'), meta: { requiresAuth: true } },
+    { path: '/stamps/:id/edit', component: () => import('./views/EditStamp.vue'), meta: { requiresAuth: true } },
     { path: '/:pathMatch(.*)*', component: NotFound }
   ]
 })
@@ -57,7 +60,6 @@ app.use(pinia)
 app.use(MotionPlugin)
 
 // Инициализация состояния пользователя из токена при загрузке приложения
-import { useAuthStore } from './stores/authStore'
 const authStore = useAuthStore()
 authStore.initializeUserFromToken()
 

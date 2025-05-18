@@ -67,7 +67,8 @@ class User(Base):
         
         access_token = create_access_token(data={
             "sub": str(user_bd.id),
-            "role": user_bd.role_id  # или user_bd.role_id, если имя не доступно
+            "role": user_bd.role_id,  # или user_bd.role_id, если имя не доступно
+            "username": user_bd.username
         })
         refresh_token = create_refresh_token(data={
             "sub": str(user_bd.id),
@@ -133,7 +134,8 @@ class User(Base):
             # Генерируем токены для нового пользователя
         access_token = create_access_token(data={
             "sub": str(db_user.id),
-            "role": db_user.role_id  # или user_bd.role_id, если имя не доступно
+            "role": db_user.role_id,  # или user_bd.role_id, если имя не доступно
+            "username": db_user.username
         })
         refresh_token = create_refresh_token(data={
             "sub": str(db_user.id),

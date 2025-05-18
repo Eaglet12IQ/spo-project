@@ -16,7 +16,7 @@ const formattedDate = computed(() => {
 </script>
 
 <template>
-  <router-link :to="`/collectors/${collector.id}`" class="block">
+  <router-link :to="`/profiles/${collector.id}`" class="block">
     <div 
       class="collector-card card h-full transition-all duration-300 hover:translate-y-[-5px]"
       v-motion
@@ -28,15 +28,22 @@ const formattedDate = computed(() => {
         <div class="flex items-start">
           <div class="relative">
             <img 
-              :src="collector.avatar" 
+              :src="collector.avatar_url" 
               :alt="collector.name" 
               class="w-16 h-16 rounded-full object-cover border-2 border-white shadow-md"
             />
           </div>
           <div class="ml-4">
-            <h3 class="text-lg font-semibold text-primary-900">{{ collector.name }}</h3>
+            <h3 class="text-lg font-semibold text-primary-900">{{ collector.last_name && collector.first_name 
+              ? collector.last_name + " " + collector.first_name[0] + "." + " " + collector.middle_name[0] + "." 
+              : "Аноним" }}</h3>
             <div class="text-sm text-primary-500">@{{ collector.username }}</div>
-            <div class="text-sm text-primary-600 mt-1">{{ collector.location }}</div>
+<div class="text-sm text-primary-600 mt-1 flex items-center">
+  <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+    <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
+  </svg>
+  {{ collector.country ? collector.country : "Неизвестно" }}
+</div>
           </div>
         </div>
         

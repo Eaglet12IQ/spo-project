@@ -23,9 +23,18 @@ export interface Profile {
 export interface Stamp {
   id: string
   name: string
+  serial_number: string
   country: string
   year: number
-  image_url: string
+  circulation?: number
+  cost?: number
+  perforation?: string
+  topic?: string
+  features?: string
+  photo_url: string
+  rarity: string
+  collection_id: number
+  collector_id: number
 }
 
 export interface StampFilter {
@@ -42,6 +51,9 @@ export interface Collection {
   name: string
   description: string
   photo_url: string
+  stamps: Stamp[]  // 👈 обязательно
+  featured?: boolean
+  collector_id: number
 }
 
 export interface Collector {

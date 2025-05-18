@@ -9,13 +9,8 @@ const props = defineProps<{
 
 const rarityColor = computed(() => {
   switch(props.stamp.rarity) {
-    case 'Unique': return 'bg-purple-100 text-purple-800'
-    case 'Extremely High': return 'bg-red-100 text-red-800'
-    case 'Very High': return 'bg-orange-100 text-orange-800'
-    case 'High': return 'bg-amber-100 text-amber-800'
-    case 'Medium': return 'bg-blue-100 text-blue-800'
-    case 'Low': return 'bg-green-100 text-green-800'
-    default: return 'bg-gray-100 text-gray-800'
+    case 'Редкая': return 'bg-blue-100 text-blue-800'
+    case 'Обычная': return 'bg-green-100 text-green-800'
   }
 })
 </script>
@@ -30,8 +25,8 @@ const rarityColor = computed(() => {
     >
       <div class="relative overflow-hidden aspect-[3/4] bg-gray-100">
         <img 
-          :src="stamp.image" 
-          :alt="stamp.title" 
+          :src="stamp.photo_url" 
+          :alt="stamp.name" 
           class="w-full h-full object-cover transition-transform duration-700 hover:scale-110"
         />
         <div class="absolute top-2 right-2">
@@ -42,13 +37,13 @@ const rarityColor = computed(() => {
       </div>
       <div class="p-4">
         <div class="flex justify-between items-start">
-          <h3 class="text-lg font-semibold text-primary-900 line-clamp-1">{{ stamp.title }}</h3>
-          <span class="text-sm font-medium text-primary-700">{{ stamp.year }}</span>
+          <h3 class="text-lg font-semibold text-primary-900 line-clamp-1">{{ stamp.name }}</h3>
+          <span class="text-sm font-medium text-primary-700">{{ stamp.year }} г.</span>
         </div>
         <div class="flex items-center mt-1 text-sm text-primary-600">
           <span>{{ stamp.country }}</span>
           <span class="mx-1">•</span>
-          <span>{{ stamp.denomination }}</span>
+          <span>{{ stamp.cost }} ₽</span>
         </div>
       </div>
     </div>
