@@ -1,3 +1,29 @@
+<template>
+  <div class="create-page min-h-screen py-12 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto">
+    <h1 class="text-3xl font-bold mb-6">Создать новую коллекцию</h1>
+    <form @submit.prevent="submitForm" class="space-y-6 bg-white p-6 rounded shadow">
+      <div>
+        <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Название</label>
+        <input id="name" v-model="name" type="text" required class="w-full border border-gray-300 rounded px-3 py-2 mt-1" />
+      </div>
+      <div>
+        <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Описание</label>
+        <textarea id="description" v-model="description" rows="4" class="w-full border border-gray-300 rounded px-3 py-2 mt-1"></textarea>
+      </div>
+      <div>
+        <label for="image" class="block text-sm font-medium text-gray-700 mb-1">Изображение</label>
+        <input id="image" type="file" accept="image/*" @change="onFileChange" class="w-full mt-1" />
+      </div>
+      <div v-if="errorMessage" class="text-red-600 font-semibold">{{ errorMessage }}</div>
+      <div class="flex justify-start">
+        <button type="submit" :disabled="isSubmitting" class="btn-primary px-6 py-2 rounded">
+          {{ isSubmitting ? 'Создание...' : 'Создать коллекцию' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</template>
+
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
@@ -29,49 +55,22 @@ const onFileChange = (event: Event) => {
 
 const submitForm = async () => {
   if (!name.value.trim()) {
-    errorMessage.value = 'Name is required'
+    errorMessage.value = 'Название обязательно'
     return
   }
   isSubmitting.value = true
   errorMessage.value = ''
-
-    try {
-      const createdCollection = await collectionStore.createCollection({
-        name: name.value,
-        description: description.value,
-        imageFile: imageFile.value
-      })
-      router.push('/collections/' + createdCollection.id) // Redirect to the created collection page
-    } catch (error) {
-      errorMessage.value = 'Failed to create collection'
-    } finally {
-      isSubmitting.value = false
-    }
+  try {
+    const created = await collectionStore.createCollection({
+      name: name.value,
+      description: description.value,
+      imageFile: imageFile.value
+    })
+    router.push('/collections/' + created.id)
+  } catch (error) {
+    errorMessage.value = 'Ошибка при создании коллекции'
+  } finally {
+    isSubmitting.value = false
+  }
 }
 </script>
-
-<template>
-  <div class="max-w-3xl mx-auto p-6 bg-white rounded shadow mt-10">
-    <h1 class="text-2xl font-bold mb-6">Создать новую коллекцию</h1>
-    <form @submit.prevent="submitForm" class="space-y-4">
-      <div>
-        <label for="name" class="block font-semibold mb-1">Название</label>
-        <input id="name" v-model="name" type="text" class="w-full border border-gray-300 rounded px-3 py-2" required />
-      </div>
-      <div>
-        <label for="description" class="block font-semibold mb-1">Описание</label>
-        <textarea id="description" v-model="description" rows="4" class="w-full border border-gray-300 rounded px-3 py-2"></textarea>
-      </div>
-      <div>
-        <label for="image" class="block font-semibold mb-1">Изображение</label>
-        <input id="image" type="file" accept="image/*" @change="onFileChange" />
-      </div>
-      <div v-if="errorMessage" class="text-red-600 font-semibold">{{ errorMessage }}</div>
-      <div>
-        <button type="submit" :disabled="isSubmitting" class="btn-primary">
-          {{ isSubmitting ? 'Создание...' : 'Создать коллекцию' }}
-        </button>
-      </div>
-    </form>
-  </div>
-</template>

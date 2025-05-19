@@ -155,7 +155,7 @@ async def delete_collection(collection_id: str, request: Request, db: Session = 
     db.commit()
     return
 
-@router.put("/update/{collection_id}")
+@router.patch("/update/{collection_id}")
 async def update_collection(
     collection_id: str,
     request: Request,

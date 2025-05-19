@@ -195,7 +195,7 @@ async function fetchStampById(id: string) {
     const token = localStorage.getItem('access_token')
 
     const response = await fetch(`http://127.0.0.1:8000/api/stamps/update/${stampId}`, {
-      method: 'PUT',
+      method: 'PATCH',
       body: formData,
       headers: {
         'Authorization': `Bearer ${token}`

@@ -285,29 +285,43 @@ onMounted(() => {
               }"
             >
               <div 
-                class="stamp-image-container relative overflow-hidden"
-                style="width: 400px; height: 400px; display: flex; justify-content: center; align-items: center;"
+                class="stamp-image-container relative overflow-hidden flex items-center justify-center"
+                style="width: 400px; height: 400px;"
               >
-                <img 
-                  :src="stamp.photo_url" 
-                  :alt="stamp.name" 
-                  class="max-w-full max-h-full object-contain"
-                  :style="{ transform: `scale(${zoomLevel}) rotate(${rotation}deg)`, transition: 'transform 0.3s ease-out' }"
-                />
-                <canvas 
-                  ref="canvasRef" 
-                  class="w-full h-auto"
-                  @mousemove="magnifierActive ? handleMagnifier($event) : null"
-                ></canvas>
-                <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 transition-all">
-                  <svg class="w-12 h-12 text-white opacity-0 transform scale-75 transition-all group-hover:opacity-100 group-hover:scale-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path>
+                <!-- Обёртка для изображения и canvas -->
+                <div class="relative flex items-center justify-center w-full h-full">
+                  <img 
+                    :src="stamp.photo_url" 
+                    :alt="stamp.name" 
+                    class="max-w-full max-h-full object-contain absolute z-10"
+                    :style="{
+                      transform: `scale(${zoomLevel}) rotate(${rotation}deg)`,
+                      transition: 'transform 0.3s ease-out'
+                    }"
+                  />
+                  <canvas 
+                    ref="canvasRef" 
+                    class="absolute z-20 w-full h-full"
+                    @mousemove="magnifierActive ? handleMagnifier($event) : null"
+                  ></canvas>
+                </div>
+
+                <!-- Лупа/иконка поверх -->
+                <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 transition-all group-hover:bg-opacity-10">
+                  <svg 
+                    class="w-12 h-12 text-white opacity-0 transform scale-75 transition-all group-hover:opacity-100 group-hover:scale-100" 
+                    fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7">
+                    </path>
                   </svg>
                 </div>
               </div>
             </div>
-            
+
             <div class="flex items-center justify-center mt-6 space-x-4">
+              <!-- Кнопки управления, если есть -->
             </div>
           </div>
           
@@ -338,25 +352,25 @@ onMounted(() => {
               
               <div class="mt-6 grid grid-cols-2 gap-4">
                 <div>
-                  <h3 class="text-sm font-medium text-primary-500">Serial Number</h3>
+                  <h3 class="text-sm font-medium text-primary-500">Серийный номер</h3>
                   <p class="text-primary-900">{{ stamp?.serial_number }}</p>
                 </div>
                 <div>
-                  <h3 class="text-sm font-medium text-primary-500">Circulation</h3>
+                  <h3 class="text-sm font-medium text-primary-500">Тираж</h3>
                   <p class="text-primary-900">{{ stamp?.circulation ?? 'N/A' }}</p>
                 </div>
                 <div>
-                  <h3 class="text-sm font-medium text-primary-500">Cost</h3>
+                  <h3 class="text-sm font-medium text-primary-500">Цена</h3>
                   <p class="text-primary-900">{{ stamp?.cost ?? 'N/A' }} ₽</p>
                 </div>
                 <div>
-                  <h3 class="text-sm font-medium text-primary-500">Perforation</h3>
+                  <h3 class="text-sm font-medium text-primary-500">Зубцовка</h3>
                   <p class="text-primary-900">{{ stamp?.perforation ?? 'N/A' }}</p>
                 </div>
               </div>
               
             <div class="mt-6">
-              <h3 class="text-sm font-medium text-primary-500">Topic</h3>
+              <h3 class="text-sm font-medium text-primary-500">Тема</h3>
               <div class="mt-2 flex flex-wrap gap-2">
                 <span 
                   v-if="stamp?.topic" 

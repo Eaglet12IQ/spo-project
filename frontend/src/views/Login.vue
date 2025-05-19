@@ -27,7 +27,7 @@ const handleSubmit = async () => {
     await authStore.login(credentials.identifier, credentials.password)
     router.push(`/profiles/${authStore.user?.id}`)
   } catch (err) {
-    error.value = 'Invalid username/email or password'
+    error.value = 'Неверный логин или пароль!'
   } finally {
     loading.value = false
   }

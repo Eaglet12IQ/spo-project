@@ -16,7 +16,7 @@ const formattedDate = computed(() => {
 </script>
 
 <template>
-  <router-link :to="`/profiles/${collector.id}`" class="block">
+  <router-link :to="collector.id ? `/profiles/${collector.id}` : '#'" class="block">
     <div 
       class="collector-card card h-full transition-all duration-300 hover:translate-y-[-5px]"
       v-motion
@@ -34,9 +34,13 @@ const formattedDate = computed(() => {
             />
           </div>
           <div class="ml-4">
-            <h3 class="text-lg font-semibold text-primary-900">{{ collector.last_name && collector.first_name 
-              ? collector.last_name + " " + collector.first_name[0] + "." + " " + collector.middle_name[0] + "." 
-              : "Аноним" }}</h3>
+            <h3 class="text-lg font-semibold text-primary-900">
+              {{
+                collector.last_name && collector.first_name
+                  ? collector.last_name + " " + collector.first_name[0] + "."
+                  : "Аноним"
+              }}
+            </h3>
             <div class="text-sm text-primary-500">@{{ collector.username }}</div>
 <div class="text-sm text-primary-600 mt-1 flex items-center">
   <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">

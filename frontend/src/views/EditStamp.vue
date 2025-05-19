@@ -133,7 +133,7 @@ onMounted(() => {
             <input id="cost" v-model.number="cost" type="number" step="0.01" class="w-full border rounded px-3 py-2" />
           </div>
           <div>
-            <label class="block font-medium mb-1" for="perforation">Перфорация</label>
+            <label class="block font-medium mb-1" for="perforation">Зубцовка</label>
             <input id="perforation" v-model="perforation" type="text" class="w-full border rounded px-3 py-2" />
           </div>
           <div>

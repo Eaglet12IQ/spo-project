@@ -164,7 +164,7 @@ async def delete_stamp(stamp_id: int, request: Request, db: Session = Depends(ge
 
     return {"detail": "Stamp deleted successfully"}
 
-@router.put("/update/{stamp_id}")
+@router.patch("/update/{stamp_id}")
 async def update_stamp(
     stamp_id: int,
     request: Request,
