@@ -157,7 +157,8 @@ class User(Base):
             "access_token": access_token,
             "token_type": "bearer",
             "username": db_user.username,
-            "email": db_user.email
+            "email": db_user.email,
+            "id": db_user.id,
         }
     
     def get_user(db: Session, user_id):

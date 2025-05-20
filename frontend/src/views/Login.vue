@@ -16,7 +16,7 @@ const error = ref('')
 
 const handleSubmit = async () => {
   if (!credentials.identifier || !credentials.password) {
-    error.value = 'Please fill in all fields'
+    error.value = 'Пожалуйста, заполните все поля!'
     return
   }
   

@@ -1,5 +1,4 @@
-from pydantic import BaseModel, EmailStr
-from pydantic import field_validator
+from pydantic import BaseModel, EmailStr, ConfigDict, field_validator
 
 # Базовая схема для пользователя
 class UserBase(BaseModel):
@@ -21,8 +20,9 @@ class User(UserBase):
     id: int
     is_active: bool
 
-    class Config:
-        from_attributes = True  # Ранее orm_mode = True
+    model_config = ConfigDict(
+        from_attributes=True  # Replaces orm_mode
+    )
 
 class UserCreateWithPasswordValidation(UserCreate):
     @field_validator('password')

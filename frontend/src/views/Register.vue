@@ -19,17 +19,17 @@ const error = ref('')
 
 const validateForm = () => {
   if (!userData.username || !userData.email || !userData.password || !userData.confirmPassword) {
-    error.value = 'Please fill in all fields'
+    error.value = 'Пожалуйста, заполните все поля!'
     return false
   }
   
   if (userData.password !== userData.confirmPassword) {
-    error.value = 'Passwords do not match'
+    error.value = 'Пароли не совпадают!'
     return false
   }
   
   if (!userData.agreeTerms) {
-    error.value = 'You must agree to the terms and conditions'
+    error.value = 'Вы должны согласиться с правилами и условиями!'
     return false
   }
   
@@ -51,7 +51,7 @@ const handleSubmit = async () => {
     
     router.push(`/profiles/${authStore.user?.id}`)
   } catch (err) {
-    error.value = 'Registration failed. Please try again.'
+    error.value = 'Регистрация не удалась! Пожалуйста, попробуйте еще раз!'
   } finally {
     loading.value = false
   }

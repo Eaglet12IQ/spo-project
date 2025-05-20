@@ -9,3 +9,4 @@ argon2_cffi
 python-multipart
 pytest
 psycopg2-binary
+httpx
