@@ -106,6 +106,22 @@ async function fetchStampById(id: string) {
     }
   }
 
+  const groupedRareStamps = ref([])
+
+  async function fetchGroupedRareStamps() {
+    loading.value = true
+    try {
+      const response = await fetch('http://localhost:8000/api/stamps/grouped_rare')
+      if (!response.ok) {
+        throw new Error('Failed to fetch grouped rare stamps')
+      }
+      const data = await response.json()
+      groupedRareStamps.value = data
+    } finally {
+      loading.value = false
+    }
+  }
+
   function getStampById(id: string) {
     return stamps.value.find(stamp => stamp.id === id)
   }
@@ -231,6 +247,8 @@ async function fetchStampById(id: string) {
     resetFilters,
     fetchStampById,
     fetchStamps,
+    fetchGroupedRareStamps,
+    groupedRareStamps,
     createStamp,
     updateStamp,
     deleteStamp

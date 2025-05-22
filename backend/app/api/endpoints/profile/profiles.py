@@ -6,6 +6,7 @@ from app.models.user import User
 from app.models.collection import Collection
 from pydantic import BaseModel, EmailStr, constr
 from typing import Optional
+from sqlalchemy import func
 
 router = APIRouter()
 
@@ -46,6 +47,178 @@ async def get_collectors_list(db: Session = Depends(get_db)):
         })
     return result
 
+@router.get("/most_expensive_stamp_collector")
+async def get_collector_with_most_expensive_stamp(db: Session = Depends(get_db)):
+    # Query to find the stamp with the highest cost
+    from app.models.stamp import Stamp
+    most_expensive_stamp = db.query(Stamp).order_by(Stamp.cost.desc()).first()
+    if not most_expensive_stamp:
+        return {"message": "No stamps found"}
+
+    # Get the collector who owns this stamp
+    collection = db.query(Collection).filter(Collection.id == most_expensive_stamp.collection_id).first()
+    if not collection:
+        return {"message": "Collection not found for the most expensive stamp"}
+
+    collector = db.query(Collector).filter(Collector.user_id == collection.collector_id).first()
+    if not collector:
+        return {"message": "Collector not found for the most expensive stamp"}
+
+    return {
+        "id": collector.user_id,
+        "username": collector.user.username,
+        "avatar_url": f"http://localhost:8000{collector.avatar_url}",
+        "country": collector.country,
+        "first_name": collector.first_name,
+        "last_name": collector.last_name,
+        "middle_name": collector.middle_name,
+        "bio": collector.bio if hasattr(collector, 'bio') else '',
+        "location": collector.location if hasattr(collector, 'location') else '',
+        "memberSince": collector.member_since if hasattr(collector, 'member_since') else '',
+        "collectionCount": len(collector.collections) if hasattr(collector, 'collections') else 0,
+        "stampCount": sum(len(collection.stamps) for collection in collector.collections) if hasattr(collector, 'collections') else 0,
+        "specialties": collector.specialties if hasattr(collector, 'specialties') else [],
+        "following": 0,
+        "followers": 0,
+        "featured": False
+    }
+
+@router.get("/max_rare_stamp_collector")
+async def get_collector_with_max_rare_stamps(db: Session = Depends(get_db)):
+    from app.models.stamp import Stamp
+
+    RARITY_THRESHOLD = 1000  # Define cost above this as rare
+
+    # Subquery to count rare stamps per collector
+    rare_stamps_subq = (
+        db.query(
+            Collection.collector_id.label("collector_id"),
+            func.count(Stamp.id).label("rare_stamp_count")
+        )
+        .join(Stamp, Stamp.collection_id == Collection.id)
+        .filter(Stamp.cost > RARITY_THRESHOLD)
+        .group_by(Collection.collector_id)
+        .subquery()
+    )
+
+    # Find collector with max rare_stamp_count
+    max_rare = db.query(
+        rare_stamps_subq.c.collector_id,
+        rare_stamps_subq.c.rare_stamp_count
+    ).order_by(rare_stamps_subq.c.rare_stamp_count.desc()).first()
+
+    if not max_rare:
+        return {"message": "No rare stamps found"}
+
+    collector = db.query(Collector).filter(Collector.user_id == max_rare.collector_id).first()
+    if not collector:
+        return {"message": "Collector not found for max rare stamps"}
+
+    return {
+        "id": collector.user_id,
+        "username": collector.user.username,
+        "avatar_url": f"http://localhost:8000{collector.avatar_url}",
+        "country": collector.country,
+        "first_name": collector.first_name,
+        "last_name": collector.last_name,
+        "middle_name": collector.middle_name,
+        "bio": collector.bio if hasattr(collector, 'bio') else '',
+        "location": collector.location if hasattr(collector, 'location') else '',
+        "memberSince": collector.member_since if hasattr(collector, 'member_since') else '',
+        "collectionCount": len(collector.collections) if hasattr(collector, 'collections') else 0,
+        "stampCount": sum(len(collection.stamps) for collection in collector.collections) if hasattr(collector, 'collections') else 0,
+        "specialties": collector.specialties if hasattr(collector, 'specialties') else [],
+        "following": 0,
+        "followers": 0,
+        "featured": False
+    }
+
+@router.get("/sorted_by_collection_value")
+async def get_collectors_sorted_by_collection_value(db: Session = Depends(get_db)):
+    from app.models.stamp import Stamp
+    from sqlalchemy import func
+
+    # Query collectors with sum of stamp costs in their collections
+    collectors_with_value = (
+        db.query(
+            Collector,
+            func.coalesce(func.sum(Stamp.cost), 0).label("total_value")
+        )
+        .outerjoin(Collection, Collection.collector_id == Collector.user_id)
+        .outerjoin(Stamp, Stamp.collection_id == Collection.id)
+        .group_by(Collector.user_id)
+        .order_by(func.coalesce(func.sum(Stamp.cost), 0).desc())
+        .all()
+    )
+
+    result = []
+    for collector, total_value in collectors_with_value:
+        result.append({
+            "id": collector.user_id,
+            "username": collector.user.username,
+            "avatar_url": f"http://localhost:8000{collector.avatar_url}",
+            "country": collector.country,
+            "first_name": collector.first_name,
+            "last_name": collector.last_name,
+            "middle_name": collector.middle_name,
+            "bio": collector.bio if hasattr(collector, 'bio') else '',
+            "location": collector.location if hasattr(collector, 'location') else '',
+            "memberSince": collector.member_since if hasattr(collector, 'member_since') else '',
+            "collectionCount": len(collector.collections) if hasattr(collector, 'collections') else 0,
+            "stampCount": sum(len(collection.stamps) for collection in collector.collections) if hasattr(collector, 'collections') else 0,
+            "specialties": collector.specialties if hasattr(collector, 'specialties') else [],
+            "following": 0,
+            "followers": 0,
+            "featured": False,
+            "totalCollectionValue": total_value
+        })
+    return result
+
+@router.get("/collectors_with_old_stamps")
+async def get_collectors_with_old_stamps(db: Session = Depends(get_db)):
+    from app.models.stamp import Stamp
+    from datetime import datetime, timedelta
+
+    ten_years_ago = datetime.now() - timedelta(days=365*10)
+    cutoff_year = ten_years_ago.year
+
+    # Subquery to find collector ids with stamps older than 10 years
+    old_stamps_subq = (
+        db.query(Collection.collector_id)
+        .join(Stamp, Stamp.collection_id == Collection.id)
+        .filter(Stamp.year < cutoff_year)
+        .distinct()
+        .subquery()
+    )
+
+    collectors = (
+        db.query(Collector)
+        .filter(Collector.user_id.in_(old_stamps_subq))
+        .all()
+    )
+
+    result = []
+    for collector in collectors:
+        result.append({
+            "id": collector.user_id,
+            "username": collector.user.username,
+            "avatar_url": f"http://localhost:8000{collector.avatar_url}",
+            "country": collector.country,
+            "first_name": collector.first_name,
+            "last_name": collector.last_name,
+            "middle_name": collector.middle_name,
+            "bio": collector.bio if hasattr(collector, 'bio') else '',
+            "location": collector.location if hasattr(collector, 'location') else '',
+            "memberSince": collector.member_since if hasattr(collector, 'member_since') else '',
+            "collectionCount": len(collector.collections) if hasattr(collector, 'collections') else 0,
+            "stampCount": sum(len(collection.stamps) for collection in collector.collections) if hasattr(collector, 'collections') else 0,
+            "specialties": collector.specialties if hasattr(collector, 'specialties') else [],
+            "following": 0,
+            "followers": 0,
+            "featured": False
+        })
+    return result
+
 @router.get("/{user_id}")
 async def get_profile(user_id: str, db: Session = Depends(get_db)):
     user = User.get_user(db, user_id)
@@ -72,36 +245,3 @@ async def get_profile(user_id: str, db: Session = Depends(get_db)):
         "middle_name": collector.middle_name,
         "collections": serialized_collections  # ✅ возвращаем кастомные коллекции
     }
-
-@router.put("/users/{user_id}", status_code=status.HTTP_200_OK)
-async def update_user(user_id: str, user_update: UserUpdateSchema, db: Session = Depends(get_db)):
-    user = db.query(User).filter(User.id == user_id).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    if user_update.username is not None:
-        user.username = user_update.username
-    if user_update.email is not None:
-        user.email = user_update.email
-    db.commit()
-    db.refresh(user)
-    return {"message": "User updated successfully"}
-
-@router.put("/collectors/{user_id}", status_code=status.HTTP_200_OK)
-async def update_collector(user_id: str, collector_update: CollectorUpdateSchema, db: Session = Depends(get_db)):
-    collector = db.query(Collector).filter(Collector.user_id == user_id).first()
-    if not collector:
-        raise HTTPException(status_code=404, detail="Collector not found")
-    if collector_update.country is not None:
-        collector.country = collector_update.country
-    if collector_update.phone_number is not None:
-        collector.phone_number = collector_update.phone_number
-    if collector_update.first_name is not None:
-        collector.first_name = collector_update.first_name
-    if collector_update.last_name is not None:
-        collector.last_name = collector_update.last_name
-    if collector_update.middle_name is not None:
-        collector.middle_name = collector_update.middle_name
-    db.commit()
-    db.refresh(collector)
-    return {"message": "Collector updated successfully"}
-

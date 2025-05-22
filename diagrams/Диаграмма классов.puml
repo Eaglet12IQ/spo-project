@@ -23,6 +23,7 @@ class Collection {
   - collector_id: Integer
   - name: String
   - description: String
+  - photo_url: String
   --
   + addStamp(stamp: Stamp): void
   + removeStamp(stamp: Stamp): void

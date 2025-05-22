@@ -80,6 +80,8 @@ async def get_collections_grouped(db: Session = Depends(get_db)):
 
     result = []
     for collector in collectors:
+        if not collector.collections or len(collector.collections) == 0:
+            continue
         collections = [
             {
                 "id": collection.id,
@@ -90,7 +92,7 @@ async def get_collections_grouped(db: Session = Depends(get_db)):
             for collection in collector.collections
         ]
         result.append({
-            "id": collector.user_id,
+            "collector_id": collector.user_id,
             "username": collector.user.username,
             "avatar_url": f"http://localhost:8000{collector.avatar_url}",
             "country": collector.country,

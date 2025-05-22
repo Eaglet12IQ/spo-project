@@ -9,7 +9,7 @@ const collectionStore = useCollectionStore()
 const collectorStore = useCollectorStore()
 
 const loading = ref(true)
-const viewMode = ref<'all' | 'grouped'>('grouped')
+const viewMode = ref<'all' | 'grouped'>('all')
 
 onMounted(async () => {
   loading.value = true

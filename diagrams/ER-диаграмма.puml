@@ -34,6 +34,7 @@ entity "Collection" as Collection {
   collector_id : Integer <<FK>>
   name : String
   description : String
+  photo_url : String
 }
 
 entity "Stamp" as Stamp {

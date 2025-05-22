@@ -215,7 +215,7 @@ function navigateTo(route: string) {
           </div>
           <div class="mt-3 space-y-1">
             <router-link 
-              to="/profile" 
+              :to="`/profiles/${user?.id}`"
               class="block px-4 py-2 text-base font-medium text-primary-700 hover:text-primary-900 hover:bg-primary-50"
               @click="closeMenus"
             >

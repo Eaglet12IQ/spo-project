@@ -12,6 +12,52 @@ router = APIRouter()
 
 AVATAR_UPLOAD_DIR = "static/stamps"
 
+@router.get("/grouped_rare")
+async def get_rare_stamps_grouped(db: Session = Depends(get_db)):
+    collectors = db.query(Collector).all()
+
+    result = []
+    for collector in collectors:
+        rare_stamps = []
+        for collection in collector.collections:
+            for stamp in collection.stamps:
+                if stamp.cost > 1000:
+                    rare_stamps.append({
+                        "id": stamp.id,
+                        "name": stamp.name,
+                        "serial_number": stamp.serial_number,
+                        "country": stamp.country,
+                        "year": stamp.year,
+                        "circulation": stamp.circulation,
+                        "cost": stamp.cost,
+                        "perforation": stamp.perforation,
+                        "topic": stamp.topic,
+                        "features": stamp.features,
+                        "photo_url": f"http://localhost:8000{stamp.photo_url}",
+                        "rarity": "Редкая"
+                    })
+        if rare_stamps:
+            result.append({
+                "collector_id": collector.user_id,
+                "username": collector.user.username,
+                "avatar_url": f"http://localhost:8000{collector.avatar_url}",
+                "country": collector.country,
+                "first_name": collector.first_name,
+                "last_name": collector.last_name,
+                "middle_name": collector.middle_name,
+                "bio": collector.bio if hasattr(collector, 'bio') else '',
+                "location": collector.location if hasattr(collector, 'location') else '',
+                "memberSince": collector.member_since if hasattr(collector, 'member_since') else '',
+                "collectionCount": len(collector.collections) if hasattr(collector, 'collections') else 0,
+                "stampCount": sum(len(collection.stamps) for collection in collector.collections) if hasattr(collector, 'collections') else 0,
+                "specialties": collector.specialties if hasattr(collector, 'specialties') else [],
+                "following": 0,
+                "followers": 0,
+                "rare_stamps": rare_stamps
+            })
+
+    return result
+
 @router.get("/{stamp_id}")
 async def get_stamp_by_id(stamp_id: int, db: Session = Depends(get_db)):
     stamp = db.query(Stamp).filter(Stamp.id == stamp_id).first()
