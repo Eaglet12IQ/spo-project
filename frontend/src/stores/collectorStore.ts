@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import type { Collector } from '../types'
+import { fetchWithTokenCheck } from '../utils/http'
 
 export const useCollectorStore = defineStore('collectors', () => {
   const collectors = ref<Collector[]>([])
@@ -30,9 +31,23 @@ export const useCollectorStore = defineStore('collectors', () => {
   async function fetchCollectors() {
     loading.value = true
     try {
-      const response = await fetch('http://localhost:8000/api/profiles/list')
+      const response = await fetchWithTokenCheck('http://localhost:8000/api/profiles/list')
       if (!response.ok) {
         throw new Error('Failed to fetch collectors')
+      }
+      const data = await response.json()
+      collectors.value = data
+    } finally {
+      loading.value = false
+    }
+  }
+
+  async function fetchTopCollectors(limit: number) {
+    loading.value = true
+    try {
+      const response = await fetchWithTokenCheck(`http://localhost:8000/api/profiles/sorted_by_collection_value?limit=${limit}`)
+      if (!response.ok) {
+        throw new Error('Failed to fetch top collectors')
       }
       const data = await response.json()
       collectors.value = data
@@ -47,6 +62,7 @@ export const useCollectorStore = defineStore('collectors', () => {
     featuredCollectors,
     getCollectorById,
     searchCollectors,
-    fetchCollectors
+    fetchCollectors,
+    fetchTopCollectors
   }
 })

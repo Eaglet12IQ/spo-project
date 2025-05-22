@@ -9,6 +9,8 @@ export const useCollectionStore = defineStore('collections', () => {
   const groupedCollections = ref<any[]>([]) // New property for grouped collections
   const currentCollection = ref<Collection | null>(null)  // 👈 добавлено
 
+  const topExpensiveCollections = ref<Collection[]>([])
+
   const loading = ref(false)
   const stampStore = useStampStore()
 
@@ -51,6 +53,25 @@ export const useCollectionStore = defineStore('collections', () => {
     const createdCollection = await response.json()
     collections.value.push(createdCollection)
     return createdCollection
+  }
+
+  async function fetchTopExpensiveCollections() {
+    loading.value = true
+    try {
+      const response = await fetchWithTokenCheck('http://127.0.0.1:8000/api/collections/top_expensive', {
+        method: 'GET',
+        credentials: 'include'
+      })
+      if (!response.ok) {
+        throw new Error('Failed to fetch top expensive collections')
+      }
+      const data = await response.json()
+      topExpensiveCollections.value = data
+    } catch (error) {
+      console.error(error)
+    } finally {
+      loading.value = false
+    }
   }
 
   async function updateCollection(collectionId: string, collectionData: { name: string; description: string; imageFile: File | null }) {
@@ -182,6 +203,7 @@ export const useCollectionStore = defineStore('collections', () => {
     collections,
     groupedCollections, // Export groupedCollections
     currentCollection,
+    topExpensiveCollections,
     loading,
     featuredCollections,
     getCollectionById,
@@ -189,6 +211,7 @@ export const useCollectionStore = defineStore('collections', () => {
     createCollection,
     fetchCollections,
     fetchGroupedCollections, // Export fetchGroupedCollections
+    fetchTopExpensiveCollections,
     fetchCollectionById,  // 👈 экспортируем
     deleteCollection,
     getCollection,

@@ -12,6 +12,27 @@ router = APIRouter()
 
 AVATAR_UPLOAD_DIR = "static/stamps"
 
+@router.get("/top_expensive")
+async def get_top_expensive_stamps(db: Session = Depends(get_db)):
+    stamps = db.query(Stamp).order_by(Stamp.cost.desc()).limit(3).all()
+    result = []
+    for stamp in stamps:
+        result.append({
+            "id": stamp.id,
+            "name": stamp.name,
+            "serial_number": stamp.serial_number,
+            "country": stamp.country,
+            "year": stamp.year,
+            "circulation": stamp.circulation,
+            "cost": stamp.cost,
+            "perforation": stamp.perforation,
+            "topic": stamp.topic,
+            "features": stamp.features,
+            "photo_url": f"http://localhost:8000{stamp.photo_url}",
+            "rarity": "Редкая" if stamp.cost > 1000 else "Обычная"
+        })
+    return result
+
 @router.get("/grouped_rare")
 async def get_rare_stamps_grouped(db: Session = Depends(get_db)):
     collectors = db.query(Collector).all()

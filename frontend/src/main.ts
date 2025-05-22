@@ -22,6 +22,8 @@ import AccountSettings from './views/AccountSettings.vue'
 
 import { useAuthStore } from './stores/authStore'
 
+const AdminPanel = () => import('./views/AdminPanel.vue')
+
 const router = createRouter({
   history: createWebHistory(),
   routes: [
@@ -39,6 +41,7 @@ const router = createRouter({
     { path: '/collections/:id/create-stamp', component: () => import('./views/CreateStamp.vue'), meta: { requiresAuth: true } },
     { path: '/collections/:id/edit', component: () => import('./views/EditCollection.vue'), meta: { requiresAuth: true } },
     { path: '/stamps/:id/edit', component: () => import('./views/EditStamp.vue'), meta: { requiresAuth: true } },
+    { path: '/admin', component: AdminPanel, meta: { requiresAuth: true, requiresAdmin: true } },
     { path: '/:pathMatch(.*)*', component: NotFound }
   ]
 })
@@ -47,6 +50,9 @@ router.beforeEach((to, from, next) => {
   const authStore = useAuthStore()
   if (to.meta.requiresAuth && !authStore.user) {
     next('/login')
+  } else if (to.meta.requiresAdmin && authStore.user?.roleId !== 1) {
+    // Redirect non-admin users trying to access admin routes
+    next('/')
   } else {
     next()
   }

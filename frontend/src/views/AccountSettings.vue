@@ -73,7 +73,7 @@ const updateProfile = async () => {
     const token = localStorage.getItem('access_token')
     // Update user data
     const userUpdateResponse = await fetchWithTokenCheck(`http://127.0.0.1:8000/api/profiles/users/${authStore.user?.id}`, {
-      method: 'PUT',
+      method: 'PATCH',
       headers: {  
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
@@ -84,7 +84,7 @@ const updateProfile = async () => {
     if (!userUpdateResponse.ok) throw new Error('Failed to update user data')
 
     const collectorUpdateResponse = await fetchWithTokenCheck(`http://127.0.0.1:8000/api/profiles/collectors/${authStore.user?.id}`, {
-      method: 'PUT',
+      method: 'PATCH',
       headers: {  
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`

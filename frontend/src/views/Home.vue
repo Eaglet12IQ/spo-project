@@ -15,22 +15,32 @@ const collectorStore = useCollectorStore()
 
 const loading = ref(true)
 
-const featuredStamps = ref(stampStore.stamps.slice(0, 3))
-const featuredCollections = ref(collectionStore.featuredCollections)
-const featuredCollectors = ref(collectorStore.featuredCollectors)
+const featuredStamps = ref([])
 
-const searchQuery = ref('')
+onMounted(async () => {
+  await stampStore.fetchTopExpensiveStamps()
+  featuredStamps.value = stampStore.topExpensiveStamps
+  setTimeout(() => {
+    loading.value = false
+  }, 600)
+})
+const featuredExpensiveCollections = ref([])
 
-function handleSearch() {
-  if (searchQuery.value.trim()) {
-    router.push({
-      path: '/stamps',
-      query: { search: searchQuery.value }
-    })
-  }
+onMounted(async () => {
+  console.log("Fetching top expensive collections...")
+  await collectionStore.fetchTopExpensiveCollections()
+  console.log("Top expensive collections fetched:", collectionStore.topExpensiveCollections)
+  featuredExpensiveCollections.value = collectionStore.topExpensiveCollections
+})
+const featuredCollectors = ref([])
+
+async function fetchTopCollectors() {
+  await collectorStore.fetchTopCollectors(2)
+  featuredCollectors.value = collectorStore.collectors
 }
 
-onMounted(() => {
+onMounted(async () => {
+  await fetchTopCollectors()
   setTimeout(() => {
     loading.value = false
   }, 600)
@@ -72,31 +82,6 @@ onMounted(() => {
           >
           Ведущая платформа для коллекционеров марок. Находите, организуйте и общайтесь с коллегами-энтузиастами.
           </p>
-          
-          <div 
-            class="mt-10"
-            v-motion
-            :initial="{ opacity: 0, y: 20 }"
-            :enter="{ opacity: 1, y: 0, transition: { duration: 600, delay: 600 } }"
-          >
-            <form @submit.prevent="handleSearch" class="sm:flex">
-              <div class="min-w-0 flex-1">
-                <label for="search" class="sr-only">Search stamps</label>
-                <input 
-                  id="search" 
-                  type="text" 
-                  v-model="searchQuery"
-                  placeholder="Поиск марок, коллекций или коллекционеров..."
-                  class="block w-full px-4 py-3 rounded-md border-0 text-base text-primary-900 placeholder-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-300"
-                />
-              </div>
-              <div class="mt-3 sm:mt-0 sm:ml-3">
-                <button type="submit" class="block w-full bg-primary-500 py-3 px-4 rounded-md text-white font-medium hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-300">
-                  Поиск
-                </button>
-              </div>
-            </form>
-          </div>
         </div>
       </div>
     </div>
@@ -154,7 +139,7 @@ onMounted(() => {
         </div>
         
         <div class="mt-12 max-w-lg mx-auto grid gap-8 lg:grid-cols-2 lg:max-w-none">
-          <div v-if="loading" v-for="i in 2" :key="i" class="flex flex-col rounded-lg shadow-lg overflow-hidden animate-pulse">
+          <div v-if="loading" v-for="i in 3" :key="i" class="flex flex-col rounded-lg shadow-lg overflow-hidden animate-pulse">
             <div class="flex-shrink-0">
               <div class="h-48 w-full bg-gray-300"></div>
             </div>
@@ -170,7 +155,7 @@ onMounted(() => {
           
           <template v-else>
             <CollectionCard 
-              v-for="collection in featuredCollections" 
+              v-for="collection in featuredExpensiveCollections" 
               :key="collection.id" 
               :collection="collection" 
             />

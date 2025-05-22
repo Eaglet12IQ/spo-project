@@ -1,9 +1,12 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+import { fetchWithTokenCheck } from '../utils/http'
 import type { Stamp, StampFilter } from '../types'
 
 export const useStampStore = defineStore('stamps', () => {
   const stamps = ref<Stamp[]>([])
+
+  const topExpensiveStamps = ref<Stamp[]>([])
 
   const loading = ref(false)
   const filters = ref<StampFilter>({
@@ -50,10 +53,10 @@ export const useStampStore = defineStore('stamps', () => {
     })
   })
 
-async function fetchStampById(id: string) {
+  async function fetchStampById(id: string) {
     loading.value = true
     try {
-      const response = await fetch(`http://localhost:8000/api/stamps/${id}`)
+      const response = await fetchWithTokenCheck(`http://localhost:8000/api/stamps/${id}`)
       if (!response.ok) {
         throw new Error('Failed to fetch stamp')
       }
@@ -71,11 +74,25 @@ async function fetchStampById(id: string) {
     }
   }
 
+  async function fetchTopExpensiveStamps() {
+    loading.value = true
+    try {
+      const response = await fetchWithTokenCheck('http://localhost:8000/api/stamps/top_expensive')
+      if (!response.ok) {
+        throw new Error('Failed to fetch top expensive stamps')
+      }
+      const data = await response.json()
+      topExpensiveStamps.value = data
+    } finally {
+      loading.value = false
+    }
+  }
+
   async function deleteStamp(id: string) {
     loading.value = true
     try {
       const token = localStorage.getItem('access_token')
-      const response = await fetch(`http://localhost:8000/api/stamps/delete/${id}`, {
+      const response = await fetchWithTokenCheck(`http://localhost:8000/api/stamps/delete/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -95,7 +112,7 @@ async function fetchStampById(id: string) {
   async function fetchStamps() {
     loading.value = true
     try {
-      const response = await fetch('http://localhost:8000/api/stamps')
+      const response = await fetchWithTokenCheck('http://localhost:8000/api/stamps')
       if (!response.ok) {
         throw new Error('Failed to fetch stamps')
       }
@@ -106,12 +123,27 @@ async function fetchStampById(id: string) {
     }
   }
 
+  async function fetchStampsBySearch(query: string) {
+    loading.value = true
+    try {
+      const response = await fetchWithTokenCheck(`http://localhost:8000/search/search?q=${encodeURIComponent(query)}`)
+      if (!response.ok) {
+        throw new Error('Failed to fetch stamps by search')
+      }
+      const data = await response.json()
+      // Update stamps with the stamps from search results
+      stamps.value = data.stamps
+    } finally {
+      loading.value = false
+    }
+  }
+
   const groupedRareStamps = ref([])
 
   async function fetchGroupedRareStamps() {
     loading.value = true
     try {
-      const response = await fetch('http://localhost:8000/api/stamps/grouped_rare')
+      const response = await fetchWithTokenCheck('http://localhost:8000/api/stamps/grouped_rare')
       if (!response.ok) {
         throw new Error('Failed to fetch grouped rare stamps')
       }
@@ -174,7 +206,7 @@ async function fetchStampById(id: string) {
 
       const token = localStorage.getItem('access_token')
 
-      const response = await fetch(`http://127.0.0.1:8000/api/stamps/create`, {
+      const response = await fetchWithTokenCheck(`http://127.0.0.1:8000/api/stamps/create`, {
         method: 'POST',
         body: formData,
         headers: {
@@ -210,7 +242,7 @@ async function fetchStampById(id: string) {
 
     const token = localStorage.getItem('access_token')
 
-    const response = await fetch(`http://127.0.0.1:8000/api/stamps/update/${stampId}`, {
+    const response = await fetchWithTokenCheck(`http://127.0.0.1:8000/api/stamps/update/${stampId}`, {
       method: 'PATCH',
       body: formData,
       headers: {
@@ -238,6 +270,7 @@ async function fetchStampById(id: string) {
 
   return { 
     stamps, 
+    topExpensiveStamps,
     loading, 
     filters,
     filteredStamps,
@@ -247,7 +280,9 @@ async function fetchStampById(id: string) {
     resetFilters,
     fetchStampById,
     fetchStamps,
+    fetchStampsBySearch,
     fetchGroupedRareStamps,
+    fetchTopExpensiveStamps,
     groupedRareStamps,
     createStamp,
     updateStamp,

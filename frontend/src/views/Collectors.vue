@@ -70,6 +70,7 @@
 import { ref, onMounted } from 'vue'
 import { useCollectorStore } from '../stores/collectorStore'
 import CollectorCard from '../components/CollectorCard.vue'
+import { fetchWithTokenCheck } from '../utils/http'
 
 const collectorStore = useCollectorStore()
 const loading = ref(true)
@@ -99,7 +100,7 @@ async function fetchMostExpensiveCollector() {
   sortedCollectors.value = []
   maxRareCollector.value = null
   try {
-    const response = await fetch('http://localhost:8000/api/profiles/most_expensive_stamp_collector')
+    const response = await fetchWithTokenCheck('http://localhost:8000/api/profiles/most_expensive_stamp_collector')
     if (!response.ok) {
       throw new Error('Failed to fetch collector with most expensive stamp')
     }
@@ -118,7 +119,7 @@ async function fetchMaxRareCollector() {
   sortedCollectors.value = []
   mostExpensiveCollector.value = null
   try {
-    const response = await fetch('http://localhost:8000/api/profiles/max_rare_stamp_collector')
+    const response = await fetchWithTokenCheck('http://localhost:8000/api/profiles/max_rare_stamp_collector')
     if (!response.ok) {
       throw new Error('Failed to fetch collector with max rare stamps')
     }
@@ -138,7 +139,7 @@ async function fetchCollectorsSortedByValue() {
   maxRareCollector.value = null
   oldStampCollectors.value = []
   try {
-    const response = await fetch('http://localhost:8000/api/profiles/sorted_by_collection_value')
+    const response = await fetchWithTokenCheck('http://localhost:8000/api/profiles/sorted_by_collection_value')
     if (!response.ok) {
       throw new Error('Failed to fetch collectors sorted by collection value')
     }
@@ -158,7 +159,7 @@ async function fetchCollectorsWithOldStamps() {
   maxRareCollector.value = null
   sortedCollectors.value = []
   try {
-    const response = await fetch('http://localhost:8000/api/profiles/collectors_with_old_stamps')
+    const response = await fetchWithTokenCheck('http://localhost:8000/api/profiles/collectors_with_old_stamps')
     if (!response.ok) {
       throw new Error('Failed to fetch collectors with old stamps')
     }

@@ -25,7 +25,11 @@ const handleSubmit = async () => {
     error.value = ''
     
     await authStore.login(credentials.identifier, credentials.password)
-    router.push(`/profiles/${authStore.user?.id}`)
+    if (authStore.user?.roleId === 1) {
+      router.push('/admin')
+    } else {
+      router.push(`/profiles/${authStore.user?.id}`)
+    }
   } catch (err) {
     error.value = 'Неверный логин или пароль!'
   } finally {

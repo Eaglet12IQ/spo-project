@@ -57,9 +57,22 @@ export interface Collection {
 }
 
 export interface Collector {
+  id: string
+  username: string
+  avatar_url: string
   country: string 
   phone_number: string
   first_name: string
   last_name: string
   middle_name: string
+  bio: string
+  location: string
+  memberSince: string
+  collectionCount: number
+  stampCount: number
+  specialties: string[]
+  following: number
+  followers: number
+  featured: boolean
+  totalCollectionValue?: number
 }

@@ -10,6 +10,45 @@ import shutil
 router = APIRouter()
 AVATAR_UPLOAD_DIR = "static/collections"
 
+from fastapi import APIRouter, Depends, HTTPException, Request, UploadFile, File, Form, status
+from sqlalchemy.orm import Session
+from sqlalchemy import func
+from app.core.database import get_db
+from app.models.collector import Collector
+from app.models.collection import Collection
+from app.models.stamp import Stamp
+from app.core.security import get_payload_from_refresh_token
+import os
+import shutil
+
+router = APIRouter()
+AVATAR_UPLOAD_DIR = "static/collections"
+
+@router.get("/top_expensive")
+async def get_top_expensive_collections(db: Session = Depends(get_db)):
+    collections = (
+        db.query(
+            Collection,
+            func.coalesce(func.sum(func.coalesce(Stamp.cost, 0)), 0).label("total_cost")
+        )
+        .outerjoin(Stamp, Stamp.collection_id == Collection.id)
+        .group_by(Collection.id)
+        .order_by(func.coalesce(func.sum(func.coalesce(Stamp.cost, 0)), 0).desc())
+        .limit(2)
+        .all()
+    )
+    result = []
+    for collection, total_cost in collections:
+        result.append({
+            "id": collection.id,
+            "collector_id": collection.collector_id,
+            "name": collection.name,
+            "description": collection.description,
+            "photo_url": f"http://localhost:8000{collection.photo_url}",
+            "total_cost": total_cost
+        })
+    return result
+
 @router.post("/create")
 async def create_collection(
     request: Request,

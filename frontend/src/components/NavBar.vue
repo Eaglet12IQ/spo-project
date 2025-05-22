@@ -107,7 +107,7 @@ function navigateTo(route: string) {
   {{ user?.username }}
 </button>
                 </div>
-                
+
                 <div 
                   v-if="isUserMenuOpen" 
                   class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
@@ -115,9 +115,22 @@ function navigateTo(route: string) {
                   :initial="{ opacity: 0, y: -10 }"
                   :enter="{ opacity: 1, y: 0, transition: { duration: 300 } }"
                 >
-<router-link :to="`/profiles/${user?.id}`" class="block px-4 py-2 text-sm text-primary-700 hover:bg-primary-100" @click="closeMenus">
+<router-link
+  v-if="user?.roleId !== 1"
+  :to="`/profiles/${user?.id}`"
+  class="block px-4 py-2 text-sm text-primary-700 hover:bg-primary-100"
+  @click="closeMenus"
+>
   Профиль
 </router-link>
+                  <router-link
+                    v-if="user?.roleId === 1"
+                    to="/admin"
+                    class="block px-4 py-2 text-sm text-primary-700 hover:bg-primary-100"
+                    @click="closeMenus"
+                  >
+                    Админ панель
+                  </router-link>
                   <a href="#" class="block px-4 py-2 text-sm text-primary-700 hover:bg-primary-100" @click="logout">
                     Выход
                   </a>

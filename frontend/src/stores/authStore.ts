@@ -18,6 +18,7 @@ export const useAuthStore = defineStore('auth', () => {
         id: userId,
         username: payload.username || '',
         email: payload.email || '',
+        roleId: payload.role || null,
       }
       } catch (error) {
         console.error('Ошибка при декодировании токена:', error)
@@ -69,6 +70,7 @@ export const useAuthStore = defineStore('auth', () => {
         id: userId,
         username: data.username,
         email: data.email,
+        roleId: payload.role || null,
       }
       return user.value
     } catch (error) {

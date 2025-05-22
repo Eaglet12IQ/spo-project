@@ -133,13 +133,17 @@ async def get_collector_with_max_rare_stamps(db: Session = Depends(get_db)):
         "featured": False
     }
 
+from fastapi import Query
+
 @router.get("/sorted_by_collection_value")
-async def get_collectors_sorted_by_collection_value(db: Session = Depends(get_db)):
+async def get_collectors_sorted_by_collection_value(
+    limit: int = Query(None, description="Limit number of collectors returned"),
+    db: Session = Depends(get_db)
+):
     from app.models.stamp import Stamp
     from sqlalchemy import func
 
-    # Query collectors with sum of stamp costs in their collections
-    collectors_with_value = (
+    query = (
         db.query(
             Collector,
             func.coalesce(func.sum(Stamp.cost), 0).label("total_value")
@@ -148,8 +152,12 @@ async def get_collectors_sorted_by_collection_value(db: Session = Depends(get_db
         .outerjoin(Stamp, Stamp.collection_id == Collection.id)
         .group_by(Collector.user_id)
         .order_by(func.coalesce(func.sum(Stamp.cost), 0).desc())
-        .all()
     )
+
+    if limit is not None:
+        query = query.limit(limit)
+
+    collectors_with_value = query.all()
 
     result = []
     for collector, total_value in collectors_with_value:
@@ -244,4 +252,62 @@ async def get_profile(user_id: str, db: Session = Depends(get_db)):
         "last_name": collector.last_name,
         "middle_name": collector.middle_name,
         "collections": serialized_collections  # ✅ возвращаем кастомные коллекции
+    }
+
+@router.patch("/users/{user_id}", status_code=200)
+async def update_user(user_id: int, user_update: UserUpdateSchema, db: Session = Depends(get_db)):
+    user = User.get_user(db, user_id)
+    updated = False
+    if user_update.username is not None:
+        # Check if username already exists for another user
+        existing_user = db.query(User).filter(User.username == user_update.username, User.id != user_id).first()
+        if existing_user:
+            raise HTTPException(status_code=400, detail="Username already exists")
+        user.username = user_update.username
+        updated = True
+    if user_update.email is not None:
+        # Check if email already exists for another user
+        existing_email_user = db.query(User).filter(User.email == user_update.email, User.id != user_id).first()
+        if existing_email_user:
+            raise HTTPException(status_code=400, detail="Email already exists")
+        user.email = user_update.email
+        updated = True
+    if updated:
+        db.commit()
+        db.refresh(user)
+    return {
+        "id": user.id,
+        "username": user.username,
+        "email": user.email
+    }
+
+@router.patch("/collectors/{user_id}", status_code=200)
+async def update_collector(user_id: int, collector_update: CollectorUpdateSchema, db: Session = Depends(get_db)):
+    collector = Collector.get_collector(db, user_id)
+    updated = False
+    if collector_update.country is not None:
+        collector.country = collector_update.country
+        updated = True
+    if collector_update.phone_number is not None:
+        collector.phone_number = collector_update.phone_number
+        updated = True
+    if collector_update.first_name is not None:
+        collector.first_name = collector_update.first_name
+        updated = True
+    if collector_update.last_name is not None:
+        collector.last_name = collector_update.last_name
+        updated = True
+    if collector_update.middle_name is not None:
+        collector.middle_name = collector_update.middle_name
+        updated = True
+    if updated:
+        db.commit()
+        db.refresh(collector)
+    return {
+        "user_id": collector.user_id,
+        "country": collector.country,
+        "phone_number": collector.phone_number,
+        "first_name": collector.first_name,
+        "last_name": collector.last_name,
+        "middle_name": collector.middle_name
     }
