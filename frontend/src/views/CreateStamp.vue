@@ -68,7 +68,7 @@ const form = reactive({
   name: '',
   serial_number: '',
   country: '',
-  year: new Date().getFullYear(),
+  year: null as number | null,
   circulation: null as number | null,
   cost: null as number | null,
   perforation: '',
@@ -108,8 +108,12 @@ async function submitForm() {
     await stampStore.createStamp(collectionId, form, imageFile.value)
     alert('Марка успешно создана')
     router.push(`/collections/${collectionId}`)
-  } catch (error) {
-    alert('Произошла ошибка при создании марки')
+  } catch (error: any) {
+    if (error?.response?.data?.detail) {
+      alert(`Ошибка: ${error.response.data.detail}`)
+    } else {
+      alert('Произошла ошибка при создании марки')
+    }
   }
 }
 </script>

@@ -134,6 +134,11 @@ async def create_stamp(
     if collection.collector_id != collector.user_id:
         raise HTTPException(status_code=403, detail="Нет доступа!")
 
+    # Check for unique serial_number
+    existing_stamp = db.query(Stamp).filter(Stamp.serial_number == serial_number).first()
+    if existing_stamp:
+        raise HTTPException(status_code=400, detail="Марка с таким серийным номером уже существует.")
+
     new_stamp = Stamp(
         name=name,
         serial_number=serial_number,

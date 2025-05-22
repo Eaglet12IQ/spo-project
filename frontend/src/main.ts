@@ -33,7 +33,6 @@ const router = createRouter({
     { path: '/stamps', component: Stamps },
     { path: '/stamps/:id', component: StampDetail },
     { path: '/collectors', component: Collectors },
-    { path: '/collectors/:id', component: CollectorDetail },
     { path: '/collections', component: Collections },
     { path: '/collections/create', component: CreateCollection, meta: { requiresAuth: true } },
     { path: '/collections/:id', component: CollectionDetail },

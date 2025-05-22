@@ -56,7 +56,8 @@ export const useAuthStore = defineStore('auth', () => {
       })
 
       if (!response.ok) {
-        throw new Error('Login failed')
+        const errorData = await response.json()
+        throw new Error(errorData.detail || 'Login failed')
       }
 
       const data = await response.json()
@@ -92,7 +93,8 @@ export const useAuthStore = defineStore('auth', () => {
       })
 
       if (!response.ok) {
-        throw new Error('Registration failed')
+        const errorData = await response.json()
+        throw new Error(errorData.detail || 'Registration failed')
       }
 
       const data = await response.json()
