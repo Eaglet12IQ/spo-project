@@ -1,0 +1,72 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Пользователь" as User
+actor "Коллекционер" as Collector
+actor "Администратор" as Admin
+
+Collector -|> User
+
+package "Действия пользователя" {
+  usecase "Регистрация" as UC_Register
+  usecase "Вход в систему" as UC_Login
+  usecase "Выход из системы" as UC_Logout
+  usecase "Просмотр профиля" as UC_ViewProfile
+  usecase "Редактирование профиля" as UC_EditProfile
+  usecase "Просмотр коллекций" as UC_ViewCollections
+  usecase "Просмотр марок" as UC_ViewStamps
+  usecase "Группировка марок" as UC_FilterSearch
+  usecase "Группировка коллекций" as UC_FilterSearch2
+
+  User --> UC_Register
+  User --> UC_Login
+  User --> UC_Logout
+  User --> UC_ViewCollections
+  User --> UC_ViewStamps
+  User --> UC_ViewProfile
+  UC_ViewProfile .> UC_EditProfile : <<extend>>
+  UC_ViewStamps .> UC_FilterSearch : <<extend>>
+  UC_ViewCollections .> UC_FilterSearch2 : <<extend>>
+  UC_Login .> UC_Logout : <<extend>>
+}
+
+package "Действия коллекционера" {
+  usecase "Управление коллекциями" as UC_ManageCollections
+  usecase "Создание коллекции" as UC_CreateCollection
+  usecase "Редактирование коллекции" as UC_EditCollection
+  usecase "Удаление коллекции" as UC_DeleteCollection
+  usecase "Загрузка изображения коллекции" as UC_UploadStampImage2
+
+  usecase "Управление марками" as UC_ManageStamps
+  usecase "Создание марки" as UC_CreateStamp
+  usecase "Редактирование марки" as UC_EditStamp
+  usecase "Удаление марки" as UC_DeleteStamp
+  usecase "Загрузка изображения марки" as UC_UploadStampImage
+
+  Collector --> UC_ManageCollections
+  UC_ManageCollections --> UC_CreateCollection : <<include>>
+  UC_ManageCollections --> UC_EditCollection : <<include>>
+  UC_ManageCollections --> UC_DeleteCollection : <<include>>
+
+  Collector --> UC_ManageStamps
+  UC_ManageStamps --> UC_CreateStamp : <<include>>
+  UC_ManageStamps --> UC_EditStamp : <<include>>
+  UC_ManageStamps --> UC_DeleteStamp : <<include>>
+  UC_CreateStamp --> UC_UploadStampImage : <<include>>
+  UC_CreateCollection --> UC_UploadStampImage2 : <<include>>
+}
+
+package "Действия администратора" {
+  usecase "Управление пользователями" as UC_ManageUsers
+  usecase "Блокировка пользователя" as UC_BlockUser
+  usecase "Редактирование профиля пользователя" as UC_EditUserProfile
+  usecase "Сброс пароля пользователя" as UC_ResetPassword
+
+  Admin --> UC_ManageUsers
+  UC_ManageUsers --> UC_BlockUser : <<extend>>
+  UC_ManageUsers --> UC_EditUserProfile : <<extend>>
+  UC_ManageUsers --> UC_ResetPassword : <<extend>>
+}
+
+@enduml

@@ -14,8 +14,13 @@ class Stamp {
   - photo_url: String
   - collection_id: Integer
   --
-  + getPrice(): Integer
-  + isRare(): Boolean
+  + getTopExpensiveStamps(): List~Stamp~
+  + getRareStampsGrouped(): List~Stamp~
+  + getStampById(stamp_id: Integer): Stamp
+  + getAllStamps(): List~Stamp~
+  + createStamp(params): Stamp
+  + deleteStamp(stamp_id: Integer): void
+  + updateStamp(stamp_id: Integer, params): Stamp
 }
 
 class Collection {
@@ -25,10 +30,12 @@ class Collection {
   - description: String
   - photo_url: String
   --
-  + addStamp(stamp: Stamp): void
-  + removeStamp(stamp: Stamp): void
-  + getTotalValue(): Integer
-  + getRareStamps(): List~Stamp~
+  + getTopExpensiveCollections(): List~Collection~
+  + createCollection(name: String, description: String, image: File): Collection
+  + getCollections(): List~Collection~
+  + getCollectionById(collection_id: String): Collection
+  + deleteCollection(collection_id: String): void
+  + updateCollection(collection_id: String, name: String, description: String, image: File): Collection
 }
 
 class Collector {
@@ -40,9 +47,13 @@ class Collector {
   - last_name: String
   - middle_name: String
   --
-  + getCollections(): List~Collection~
-  + getRareStampsCount(): Integer
-  + getMostExpensiveStamp(): Stamp
+  + getCollectorsList(): List~Collector~
+  + getCollectorWithMostExpensiveStamp(): Collector
+  + getCollectorWithMaxRareStamps(): Collector
+  + getCollectorsSortedByCollectionValue(limit: Integer): List~Collector~
+  + getCollectorsWithOldStamps(): List~Collector~
+  + getProfile(user_id: String): Collector
+  + updateCollector(user_id: Integer, collector_update): Collector
 }
 
 class User {
@@ -52,24 +63,21 @@ class User {
   - hashed_password: String
   - role_id: Integer
   --
-  + authenticate(password: String): Boolean
-  + verifyPassword(password: String): Boolean
-  + generateAccessToken(): String
-  + generateRefreshToken(): String
-  + getRole(): Role
+  + login(response, user): dict
+  + logout(request, response): dict
+  + register(response, user): dict
+  + delete(response, request): dict
+  + updateUser(user_id: Integer, user_update): User
 }
 
 class Role {
   - id: Integer
   - name: String
-  --
-  + getUsers(): List~User~
-  + addUser(user: User): void
 }
 
 User "1" -- "1" Collector
 Role "1" -- "*" User
 Collector "1" -- "*" Collection
-Collection "1" -- "1" Stamp
+Collection "1" -- "*" Stamp
 
 @enduml

@@ -56,6 +56,6 @@ entity "Stamp" as Stamp {
 Role ||--o{ User
 User ||--|| Collector
 Collector ||--o{ Collection
-Collection ||--|| Stamp
+Collection ||--o{ Stamp
 
 @enduml
