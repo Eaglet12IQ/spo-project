@@ -61,12 +61,10 @@ package "Действия администратора" {
   usecase "Управление пользователями" as UC_ManageUsers
   usecase "Блокировка пользователя" as UC_BlockUser
   usecase "Редактирование профиля пользователя" as UC_EditUserProfile
-  usecase "Сброс пароля пользователя" as UC_ResetPassword
 
   Admin --> UC_ManageUsers
   UC_ManageUsers --> UC_BlockUser : <<extend>>
   UC_ManageUsers --> UC_EditUserProfile : <<extend>>
-  UC_ManageUsers --> UC_ResetPassword : <<extend>>
 }
 
 @enduml
