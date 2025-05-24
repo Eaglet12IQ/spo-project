@@ -202,7 +202,7 @@ def test_update_user_info(test_db):
     data = response.json()
     id = data["id"]
     headers = {"Authorization": f"Bearer {access_token}"}
-    response = client.put(f"/api/profiles/users/{id}", json={
+    response = client.patch(f"/api/profiles/users/{id}", json={
         "username": "updateduser",
         "email": "updateduser@example.com"
     }, headers=headers)
@@ -214,7 +214,7 @@ def test_update_collector_info(test_db):
     data = response.json()
     id = data["id"]
     headers = {"Authorization": f"Bearer {access_token}"}
-    response = client.put(f"/api/profiles/collectors/{id}", json={
+    response = client.patch(f"/api/profiles/collectors/{id}", json={
         "country": "New Country",
         "phone_number": "1234567890"
     }, headers=headers)

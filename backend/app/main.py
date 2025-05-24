@@ -3,6 +3,7 @@ from app.api.routers import api_router
 from app.middleware.auto_refresh import auto_refresh_token_middleware
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from pathlib import Path
 from app.middleware.logging import LoggingMiddleware
 import app.logging_config  # to initialize logging config
 
@@ -20,6 +21,7 @@ app.add_middleware(
     allow_headers=["*"],  # Разрешить все заголовки
 )
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
+static_path = Path(__file__).parent.parent / "static"
+app.mount("/static", StaticFiles(directory=str(static_path)), name="static")
 
 app.include_router(api_router, prefix="/api")
