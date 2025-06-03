@@ -25,7 +25,7 @@ services:
       - ./backend:/app/backend
     environment:
       - PYTHONUNBUFFERED=1
-      - DATABASE_URL=postgresql://postgres:12345@localhost:5432/marki
+      - DATABASE_URL=postgresql://postgres:12345@postgres_db:5432/marki
     depends_on:
       - db
 
